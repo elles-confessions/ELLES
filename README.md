@@ -1,17 +1,18 @@
-# ELLES — paquet de desplegament
+# ELLES — Confessions d'un seductor
 
-Aquest paquet separa l’HTML, el CSS i el JavaScript per facilitar el manteniment i el desplegament estàtic. El contingut literari i la interfície s’han preservat en aquesta primera neteja estructural.
+Paquet preparat per publicar amb GitHub Pages.
 
-## Publicació de proves
+## Publicació
+1. Descomprimeix aquest ZIP.
+2. Puja **el contingut** d'aquesta carpeta al directori arrel del repositori GitHub (no la carpeta contenidora).
+3. Comprova que `index.html` quedi directament a l'arrel.
+4. A GitHub, ves a **Settings → Pages**.
+5. A **Build and deployment**, selecciona **Deploy from a branch**, branca `main` i carpeta `/ (root)`, i desa.
 
-Es pot desplegar la carpeta sencera a Cloudflare Pages (Direct Upload) o connectar-la a un repositori Git. La pàgina d’entrada és `index.html`.
+## Estructura
+- `index.html`: entrada principal del llibre.
+- `assets/`: imatges i altres recursos.
+- `assets/js/app.js`: fitxer JavaScript conservat al projecte.
+- `assets/css/styles.css`: full d'estils conservat al projecte.
 
-## Abans d’obrir al públic
-
-- Migrar `localStorage` a Supabase amb autenticació i polítiques RLS.
-- Implementar confirmació de pagament al servidor (Stripe Checkout + webhook).
-- No exposar claus secretes al navegador.
-- Revisar privacitat, consentiment, condicions de compra i còpies de seguretat.
-- Fer proves de navegació, accessibilitat i mòbil.
-
-Aquest paquet encara no connecta Supabase ni Stripe i no activa cobraments reals.
+Nota: la versió actual d'`index.html` conté els seus estils i scripts incorporats directament; els fitxers `assets/js/app.js` i `assets/css/styles.css` es conserven a l'estructura del projecte, però no s'importen automàticament per aquesta pàgina.

@@ -5,7 +5,350 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111315">
 <title>ELLES: Confessions d'un borratxo</title>
-<link rel="stylesheet" href="/assets/css/styles.css">
+<style>
+:root { --bg:#111315; --paper:#e8e1d5; --rose:#c76c79; --muted:#92918c; }
+* { box-sizing:border-box; }
+html, body { width:100%; height:100%; min-height:0; margin:0; overflow:hidden; }
+body {
+  height:100vh; height:100dvh; background:var(--bg); color:var(--paper);
+  font-family:Georgia,serif; display:flex; flex-direction:column;
+  overscroll-behavior:none;
+}
+header { display:none; }
+.logo { font-family:monospace; font-size:26px; letter-spacing:12px; padding-left:12px; color:var(--rose); }
+.subtitle { color:var(--muted); font:10px monospace; letter-spacing:3px; margin-top:8px; }
+main {
+  width:min(1200px,100%); flex:1 1 auto; min-height:0; min-width:0;
+  margin:0 auto; padding:6px 0; display:flex; flex-direction:column; overflow:hidden;
+}
+.chapter-heading-row { flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:12px; width:100%; text-align:center; }
+.chapter { flex:0 0 auto; color:var(--rose); font:11px monospace; letter-spacing:3px; white-space:nowrap; }
+#main-chapter-title { flex:0 1 auto; min-width:0; color:var(--rose); font:11px monospace; letter-spacing:3px; margin:0; text-align:center; }
+h1 { flex:0 0 auto; color:var(--rose); font:11px monospace; letter-spacing:3px; margin:0; }
+h2 { flex:0 0 auto; font-size:15px; font-weight:normal; color:var(--muted); font-style:italic; margin:0 0 14px; }
+.screen {
+  position:relative; background:#191c1f; border:1px solid #35383a; border-radius:8px;
+  padding:18px 22px; box-shadow:0 15px 45px #0008; display:flex; flex-direction:column;
+  flex:1 1 auto; min-height:0; overflow:hidden;
+}
+.screen-header { display:flex; justify-content:flex-start; align-items:center; gap:8px;
+  padding-bottom:10px; border-bottom:1px solid #35383a; color:#aaa; font:11px monospace; flex:0 0 auto; }
+.file-tools { display:flex; align-items:center; justify-content:flex-start; gap:10px; min-width:0; margin-right:auto; }
+#theme-toggle { min-height:36px; min-width:40px; padding:0 9px; border-radius:7px; font-size:19px; line-height:1; letter-spacing:0; white-space:nowrap; }
+#voice-button { min-height:36px; min-width:40px; width:40px; padding:0; display:flex; align-items:center; justify-content:center; letter-spacing:0; white-space:nowrap; }
+#voice-button:disabled { opacity:.32; filter:grayscale(1); cursor:not--allowed; }
+#voice-button svg { width:23px; height:23px; display:block; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+#home-button { margin-left:0; min-height:36px; min-width:40px; padding:0 8px; font-size:25px; line-height:1; letter-spacing:0; display:flex; align-items:center; justify-content:center; }
+.dot { display:inline-block; width:7px; height:7px; background:#b66a72; border-radius:50%; margin-right:6px; }
+#scene {
+  flex:0 0 68px; height:68px; display:flex; align-items:center; justify-content:center;
+  margin:8px auto 10px; width:100%; color:var(--rose); opacity:.9;
+  transition:opacity .25s ease;
+}
+#scene svg { width:100%; height:100%; max-width:260px; overflow:visible; }
+#scene .line { fill:none; stroke:currentColor; stroke-width:1.35; stroke-linecap:round; stroke-linejoin:round; }
+#scene .soft { fill:currentColor; opacity:.12; stroke:none; }
+#story {
+  position:relative; white-space:pre-wrap; overflow-wrap:break-word;
+  font:19px/1.7 Georgia,serif; color:#ddd7ce;
+  text-align:justify; text-justify:inter-word;
+  -webkit-hyphens:auto; -ms-hyphens:auto; hyphens:auto;
+  flex:1 1 auto; min-height:0;
+  overflow:hidden; padding:14px 0 25px;
+}
+#story.show-all-text { overflow-y:auto; }
+.chapter-end-mark {
+  display:block; width:100%; margin:22px 0 0; padding:0 0 4px;
+  text-align:center; font: bold 1.65em/1.2 Georgia,serif;
+  letter-spacing:8px; color:var(--rose);
+}
+.cursor { display:inline-block; color:var(--rose); animation:blink .8s infinite; }
+.pause-dots {
+  position:absolute; right:0; bottom:0; padding:0 3px 0 12px;
+  color:var(--rose); letter-spacing:3px; background:#191c1f;
+  animation:blink .8s steps(2,start) infinite;
+}
+@keyframes blink { 50% { opacity:0; } }
+.progress-wrap { flex:0 0 auto; padding-top:10px; }
+.progress-meta { display:flex; justify-content:space-between; gap:8px; color:var(--muted);
+  font:9px monospace; letter-spacing:1px; margin-bottom:6px; }
+.progress-track { height:3px; background:#393437; border-radius:10px; overflow:hidden; }
+.progress-fill { width:0; height:100%; background:linear-gradient(90deg,#a83242,#d78a91); transition:width .15s linear; }
+.controls { display:flex; flex:0 0 auto; gap:9px; margin-top:12px; }
+button {
+  min-height:42px; padding:0 17px; background:#222528; border:1px solid #51454a;
+  border-radius:10px; color:var(--paper); cursor:pointer; font:11px monospace;
+  letter-spacing:1.5px; transition:background .18s,border-color .18s;
+}
+button:hover, button:focus-visible { background:#39262c; border-color:var(--rose); outline:none; }
+button:disabled { opacity:.35; cursor:default; }
+#start, #next, #previous {
+  flex:1 1 0; min-height:54px; padding:0;
+  display:grid; place-items:center;
+  text-align:center; line-height:1; box-sizing:border-box;
+}
+#previous, #next {
+  font-size:30px; font-weight:700; line-height:1;
+  text-align:center; vertical-align:middle;
+  padding:0; margin:0;
+}
+#previous::first-letter, #next::first-letter { line-height:1; }
+#start .write-icon { display:block; width:36px; height:30px; margin:0; flex:0 0 auto; }
+.hint { color:var(--muted); font:9px monospace; margin-top:9px; text-align:right; flex:0 0 auto; }
+footer { flex:0 0 auto; text-align:center; padding:5px 10px max(7px, env(safe-area-inset-bottom)); color:var(--muted); font-size:10px; }
+
+.chapter-rating { margin:18px auto 2px; padding:14px 12px 10px; border-top:1px solid #51454a; text-align:center; }
+.chapter-rating-title { margin:0 0 9px; color:var(--paper); font:12px monospace; letter-spacing:1px; }
+.rating-stars { display:flex; justify-content:center; gap:8px; }
+.rating-star { min-height:40px; min-width:40px; padding:0; border:0; background:transparent; color:#777; font:30px/1 sans-serif; letter-spacing:0; }
+.rating-star.selected { color:#e2b64f; }
+.rating-star:hover, .rating-star:focus-visible { background:transparent; color:#f0cf72; }
+.rating-feedback { min-height:15px; margin:7px 0 0; color:var(--muted); font:10px monospace; }
+
+.flowers { color:var(--rose); font-size:17px; letter-spacing:8px; margin-bottom:3px; }
+body.light-reading .screen { background:#fff; border-color:#d8d8d8; box-shadow:0 12px 35px #0002; }
+body.light-reading .screen-header { color:#555; border-color:#ddd; }
+body.light-reading #story { color:#171717; }
+body.light-reading .pause-dots { background:#fff; }
+body.light-reading .progress-track { background:#e5e5e5; }
+body.light-reading .progress-meta { color:#666; }
+body.light-reading .hint { color:#777; }
+@media (max-width:500px) {
+  header { padding:9px 12px; } .logo { font-size:22px; } .subtitle { font-size:9px; }
+  main { width:100%; padding:2px 0; } .screen { padding:10px 12px; border-radius:5px; }
+  h2 { margin-bottom:8px; }
+  #scene { flex-basis:58px; height:58px; margin:3px auto 5px; }
+  #story { font-size:17px; line-height:1.62; padding:13px 0 25px; }
+  button { min-height:40px; padding:0 10px; font-size:10px; }
+}
+@media (max-height:650px) {
+  header { padding:6px 10px; } .logo { font-size:20px; } .subtitle { margin-top:4px; }
+  main { padding:6px 0; } h1 { font-size:23px; margin:4px 0 1px; }
+  h2 { font-size:13px; margin-bottom:6px; } .screen { padding:9px; }
+  #story { font-size:15px; line-height:1.5; padding-top:9px; }
+  .controls { margin-top:7px; } button { min-height:35px; }
+  footer { padding-top:2px; } .flowers { font-size:13px; margin-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce) { .cursor,.pause-dots { animation:none; } }
+
+.overlay {
+  position:fixed; inset:0; z-index:20; display:flex; align-items:center; justify-content:center;
+  padding:clamp(8px,2vw,22px); background:rgba(8,9,10,.94); backdrop-filter:blur(5px);
+}
+.overlay[hidden], .tomorrow-screen[hidden] { display:none; }
+.modal-card, .index-card {
+  position:relative; width:min(520px,100%); padding:30px 24px; text-align:center;
+  background:#191c1f; border:1px solid #51454a; border-radius:12px;
+  box-shadow:0 20px 70px #000b;
+}
+/* Llista de capítols: el contingut del panell pot desplaçar-se en pantalles baixes. */
+.index-card { width:min(760px,100%); min-width:0; max-height:calc(100dvh - 2 * clamp(8px,2vw,22px)); overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+.modal-card h2 { color:var(--paper); font:normal clamp(22px,5vw,30px)/1.3 Georgia,serif; margin:12px 0; }
+.modal-card p { color:var(--muted); font:14px monospace; margin:12px 0 24px; }
+.confetti { color:var(--rose); font-size:25px; letter-spacing:12px; animation:confetti-pop 1.2s ease-in-out infinite alternate; }
+@keyframes confetti-pop { from { transform:translateY(5px) rotate(-5deg); opacity:.55; } to { transform:translateY(-8px) rotate(5deg); opacity:1; } }
+.modal-actions { display:flex; gap:12px; }
+.modal-actions button { flex:1; min-height:48px; }
+.index-heading { color:var(--rose); margin-bottom:20px; position:relative; padding-top:2px; }
+.index-quick-actions { position:static; display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+.index-label-row { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; }
+.index-quick-button { width:40px; height:40px; min-width:40px; min-height:40px; padding:7px; display:flex; align-items:center; justify-content:center; border:1px solid #59434a; border-radius:10px; background:#202326; color:#f0a0b0; box-shadow:0 0 12px #d78a9120; }
+.index-quick-button svg { width:23px; height:23px; display:block; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.index-quick-button.instagram svg { fill:none; stroke-width:1.9; }
+.index-quick-button:active { transform:scale(.96); }
+.shortcut-card { width:min(440px,100%); padding:24px 20px; border:1px solid #59434a; border-radius:13px; background:#191c1f; box-shadow:0 20px 70px #000b; color:var(--paper); }
+.shortcut-card h2 { color:var(--rose); font:16px monospace; letter-spacing:1px; margin:0 0 16px; }
+.shortcut-card p, .shortcut-card li { color:#d5d0c9; font:13px/1.55 Georgia,serif; }
+.shortcut-card ol { padding-left:22px; margin:10px 0 18px; }
+.shortcut-close { width:100%; min-height:44px; }
+
+.title-art-wrap { position:relative; width:100%; isolation:isolate; }
+.title-art-wrap .index-title-image { position:relative; z-index:0; }
+.heart-bubble { position:absolute; z-index:1; left:var(--x); top:var(--y); color:#ff75d5; font:700 var(--size)/1 Georgia,serif; line-height:1; text-shadow:0 0 4px #fff,0 0 9px #ff35c8,0 0 17px #ff159e; opacity:0; pointer-events:none; animation:heart-bubble-rise var(--duration) ease-in infinite; animation-delay:var(--delay); transform-origin:center; filter:drop-shadow(0 0 3px #ff7bd9);}
+
+@keyframes heart-bubble-rise { 0% { opacity:0; transform:translate3d(0,18px,0) scale(.45) rotate(-12deg); } 9% { opacity:.95; } 58% { opacity:.9; transform:translate3d(var(--drift),-78px,0) scale(1) rotate(8deg); } 78% { opacity:1; transform:translate3d(calc(var(--drift) * 1.35),-112px,0) scale(1.18) rotate(-8deg); } 88% { opacity:.95; transform:translate3d(calc(var(--drift) * 1.4),-120px,0) scale(1.75); filter:brightness(1.8) drop-shadow(0 0 9px #ffb6ee); } 100% { opacity:0; transform:translate3d(calc(var(--drift) * 1.5),-128px,0) scale(.05); } }
+
+.hb1 { --x:23%; --y:44%; --size:15px; --duration:4.2s; --delay:-.4s; --drift:12px; }
+.hb2 { --x:27%; --y:51%; --size:20px; --duration:4.8s; --delay:-2.1s; --drift:-10px; }
+.hb3 { --x:31%; --y:48%; --size:13px; --duration:4.5s; --delay:-3.2s; --drift:8px; }
+.hb4 { --x:25%; --y:57%; --size:17px; --duration:5.1s; --delay:-1.4s; --drift:-14px; }
+.hb5 { --x:34%; --y:53%; --size:12px; --duration:4.4s; --delay:-2.7s; --drift:11px; }
+.hb6 { --x:29%; --y:60%; --size:22px; --duration:5.3s; --delay:-.9s; --drift:7px; }
+.hb7 { --x:20%; --y:55%; --size:11px; --duration:4.7s; --delay:-3.8s; --drift:-8px; }
+.hb8 { --x:37%; --y:58%; --size:15px; --duration:5s; --delay:-1.9s; --drift:13px; }
+.hb9 { --x:24%; --y:63%; --size:13px; --duration:4.6s; --delay:-2.4s; --drift:-12px; }
+.hb10 { --x:32%; --y:65%; --size:18px; --duration:5.2s; --delay:-.2s; --drift:9px; }
+.hb11 { --x:18%; --y:48%; --size:12px; --duration:4.9s; --delay:-3.5s; --drift:10px; }
+.hb12 { --x:39%; --y:47%; --size:12px; --duration:4.3s; --delay:-1.1s; --drift:-9px; }
+@media (prefers-reduced-motion:reduce) { .heart-bubble { animation:none !important; opacity:0 !important; } }
+
+.index-title-image { display:block; width:100%; max-width:100%; height:auto; max-height:220px; object-fit:contain; margin:0 auto 14px; }
+.index-heading .index-label { display:block; margin-top:0; letter-spacing:3px; font:12px monospace; text-align:left; }
+    .specials-toggle { width:100%; min-height:42px; display:flex; align-items:center; justify-content:center; gap:9px; margin:10px 0 8px; padding:9px 14px; border:1px solid #b58ae8; border-radius:9px; background:linear-gradient(135deg,#7442a5,#512477); color:#fff; font:600 13px monospace; letter-spacing:1px; box-shadow:0 3px 14px #8b50c455; cursor:pointer; }
+    .specials-toggle:active { transform:scale(.985); }
+    .specials-toggle[aria-expanded="true"] .specials-chevron { transform:rotate(180deg); }
+    .specials-chevron { display:inline-block; transition:transform .2s ease; font-size:17px; line-height:1; }
+    .specials-list[hidden] { display:none; }
+    .specials-list { margin:0 0 10px; padding:2px 0 4px; border-bottom:1px solid #7953a0; }
+.chapter-choice {
+  width:100%; min-width:0; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto;
+  align-items:start; justify-content:stretch; gap:7px;
+  padding:12px 13px; margin:8px 0; border-radius:0; font:14px Georgia,serif;
+  text-align:left; border:0; border-bottom:1px solid rgba(190,195,200,.72); background:transparent; box-shadow:none; color:var(--paper);
+}
+.chapter-name { display:block; min-width:0; max-width:100%; font-size:12px; line-height:1.25; font-weight:600; overflow-wrap:anywhere; }
+.chapter-meta { display:flex; align-items:center; flex-wrap:wrap; gap:clamp(6px,2vw,14px); min-width:0; min-height:19px; color:#a8aaa5; font:11px monospace; }
+.chapter-choice button, .chapter-choice .chapter-meta span { flex:0 0 auto; }
+button.chapter-choice { cursor:pointer; }
+.chapter-choice.available { border-color:var(--rose); color:#f0dce0; }
+.chapter-choice.completed { border-color:#39b86a; color:#d8eddd; }
+.chapter-choice.completed .chapter-meta, .chapter-choice.completed [id$="-status"] { color:#55d987; font-weight:700; }
+.chapter-choice.in-progress { border-color:var(--rose); color:#f0dce0; cursor:pointer; }
+.chapter-choice.in-progress .chapter-meta { color:var(--rose); }
+.chapter-choice.locked { opacity:.42; cursor:not-allowed; }
+.chapter-choice .chapter-time { color:#a8aaa5; font:11px monospace; white-space:nowrap; }
+.chapter-rating-summary { color:#e2b64f; font:11px monospace; white-space:nowrap; letter-spacing:1px; }
+.chapter-arrow { margin-left:auto; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; flex:0 0 30px; border-radius:50%; color:#fff !important; font: bold 20px/1 Arial,sans-serif; background:linear-gradient(145deg,#d97885,#963847); border:1px solid #f0aab2; box-shadow:0 3px 10px #d9788540,inset 0 1px 2px #ffffff55; transition:transform .2s ease,box-shadow .2s ease,filter .2s ease; }
+.chapter-choice.available:hover .chapter-arrow, .chapter-choice:focus-visible .chapter-arrow { transform:translateX(3px) scale(1.08); filter:brightness(1.15); box-shadow:0 4px 14px #d9788570,inset 0 1px 2px #ffffff66; }
+.chapter-choice.completed .chapter-arrow { background:linear-gradient(145deg,#54d987,#197a48); border-color:#8af0ae; }
+.chapter-choice.available, .chapter-choice.completed, .chapter-choice.in-progress, .chapter-choice.locked { border-top:0; border-left:0; border-right:0; border-bottom:1px solid rgba(190,195,200,.72); background:transparent; box-shadow:none; }
+.chapter-choice .chapter-time::first-letter { font-size:22px; font-weight:bold; vertical-align:-3px; }
+.chapter-choice.christmas-special .chapter-time { color:#39d878; }
+.chapter-choice.christmas-special .chapter-meta { color:#39d878; }
+.back-button { margin-top:16px; width:100%; }
+.reading-stats { margin-top:18px; padding:8px 9px 7px; border:1px solid rgba(170,170,170,.45); background:linear-gradient(145deg,rgba(128,128,128,.55),rgba(92,92,92,.55)); border-radius:10px; text-align:left; box-shadow:0 6px 16px #0003; }
+.floating-reading-stats { position:fixed; z-index:25; left:0; right:0; bottom:24px; transform:none; width:100%; max-width:none; box-sizing:border-box; margin:0; border-radius:0; padding:0 0 env(safe-area-inset-bottom); background:transparent; border:0; box-shadow:none; animation:stats-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+@keyframes stats-rise { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
+.floating-reading-stats { will-change:transform; transition:transform .22s ease-out; }
+.floating-reading-stats.is-scrolling { animation:stats-scroll-motion .42s cubic-bezier(.2,.8,.2,1); }
+.floating-reading-stats.is-scrolling .stats-grid > div:nth-child(1) { animation:stats-column-bob .42s ease-out; }
+.floating-reading-stats.is-scrolling .stats-grid > div:nth-child(2) { animation:stats-column-bob .48s ease-out; }
+.floating-reading-stats.is-scrolling .stats-grid > div:nth-child(3) { animation:stats-column-bob .54s ease-out; }
+@keyframes stats-scroll-motion { 0% { transform:translateY(0); } 35% { transform:translateY(-5px); } 100% { transform:translateY(0); } }
+@keyframes stats-column-bob { 0% { transform:translateY(0); } 45% { transform:translateY(-3px); } 100% { transform:translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .floating-reading-stats { animation:none; } }
+#chapter-index .index-card { padding-bottom:145px; }
+.stats-heading { color:var(--rose); font:10px monospace; letter-spacing:2px; margin-bottom:13px; text-align:center; }
+.stats-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; width:100%; }
+.stats-grid div { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:0; min-height:72px; padding:9px 3px calc(10px + env(safe-area-inset-bottom)); border:0; border-radius:0; background:rgba(0,0,0,.75); text-align:center; }
+.stats-grid .premium-stats-button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:0; min-height:72px; padding:9px 3px calc(10px + env(safe-area-inset-bottom)); border:0; border-radius:0; background:rgba(0,0,0,.75); color:inherit; text-align:center; cursor:pointer; font:inherit; }
+.stats-grid .premium-stats-button:active { background:rgba(40,40,40,.95); }
+.stats-grid .premium-stats-button > span:not(.stats-icon) { color:var(--muted); font:9px monospace; line-height:1.2; text-transform:uppercase; }
+.stats-grid .premium-stats-button .stats-icon { color:#c9a7ff; filter:drop-shadow(0 0 5px #a66cff99); }
+.stats-grid .premium-stats-button #premium-episode-total { color:#c9a7ff; font:bold 13px Georgia,serif; line-height:1.1; }
+.stats-grid .premium-stats-button .premium-episode-caption { color:var(--muted); font:8px monospace; line-height:1.1; text-transform:none; }
+.stats-grid .premium-stats-button:focus-visible { outline:2px solid #c9a7ff; outline-offset:-2px; }
+.stats-grid .stats-icon { color:var(--rose); width:22px; height:22px; display:flex; align-items:center; justify-content:center; line-height:1; filter:drop-shadow(0 0 4px #d78a9140); flex:0 0 22px; }
+.stats-grid .stats-icon svg { width:22px; height:22px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.stats-grid span:not(.stats-icon) { color:var(--muted); font:9px monospace; line-height:1.2; letter-spacing:.1px; text-transform:uppercase; }
+.stats-grid strong { color:var(--paper); font: bold 16px Georgia,serif; font-variant-numeric:tabular-nums; }
+.stats-track { height:3px; margin-top:6px; background:#393437; border-radius:10px; overflow:hidden; }
+#reading-progress-fill { width:0%; height:100%; background:linear-gradient(90deg,#a83242,#d78a91); transition:width .2s ease; }
+@media(max-width:380px) { .stats-grid span { font-size:8px; } .stats-grid strong { font-size:14px; } #voice-button { font-size:9px; padding:0 6px; } }
+.tomorrow-screen {
+  position:fixed; inset:0; z-index:30; background:#08090a;
+  display:flex; align-items:center; justify-content:center;
+}
+.tomorrow-screen button {
+  border:0; background:transparent; color:var(--rose); font:40px monospace;
+  letter-spacing:12px; animation:blink .8s steps(2,start) infinite;
+  min-width:120px; min-height:100px;
+}
+.chapter-preview-card h2 { margin:24px 0 16px; }
+.admin-card { position:relative; width:min(620px,100%); max-height:90dvh; overflow:auto; padding:26px 22px; text-align:left; background:#191c1f; border:1px solid #72505a; border-radius:12px; box-shadow:0 20px 70px #000b; }
+.admin-card h2 { color:var(--rose); font:12px monospace; letter-spacing:3px; margin:0 0 18px; }
+.admin-card label { display:block; color:var(--muted); font:10px monospace; margin:13px 0 6px; }
+.admin-card input,.admin-card select,.admin-card textarea { width:100%; color:var(--paper); background:#101214; border:1px solid #51454a; border-radius:7px; padding:11px; font:13px monospace; }
+.admin-card textarea { min-height:190px; resize:vertical; line-height:1.5; }
+.admin-actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
+.admin-note { color:var(--muted); font:10px/1.5 monospace; margin:12px 0; }
+.admin-stats { margin-top:14px; padding:14px; background:#101214; border-radius:8px; color:var(--muted); font:12px/1.6 monospace; }
+.admin-stats strong { color:var(--paper); }
+.admin-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+
+@media(max-width:500px) {
+  .modal-card,.index-card { width:100%; max-width:100%; padding:clamp(14px,4vw,24px) clamp(10px,3.5vw,17px); }
+  .index-label-row { flex-wrap:wrap; gap:8px; }
+  .index-quick-actions { gap:6px; }
+  .chapter-choice { font-size:13px; padding:13px 10px; }
+}
+
+#start { display:flex; align-items:center; justify-content:center; }
+.write-icon { width:38px; height:30px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+#start .write-icon path:nth-of-type(4) { fill:var(--rose); fill-opacity:.16; }
+
+
+
+    .mariajo-special { grid-template-columns:minmax(0,1fr) 68px; grid-template-rows:auto; align-items:center; gap:12px; }
+    .mariajo-special-info { min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:9px; }
+    .mariajo-special .chapter-meta { width:100%; justify-content:flex-start; }
+    .mariajo-special .special-price { margin-left:0; }
+    .mariajo-special-photo { display:block; width:68px; height:68px; object-fit:cover; object-position:center 28%; border-radius:7px; border:1px solid #c99af0; }
+    @media (max-width:360px) { .mariajo-special { grid-template-columns:minmax(0,1fr) 58px; gap:8px; } .mariajo-special-photo { width:58px; height:58px; } }
+    .christmas-special {
+      border: 1px solid #a879d6 !important;
+      color: #eadcf8 !important;
+      background: linear-gradient(100deg, rgba(168, 121, 214, .16), rgba(168, 121, 214, .05)) !important;
+      box-shadow: inset 0 0 0 1px rgba(168, 121, 214, .14);
+    }
+    .christmas-special .chapter-meta,
+    .christmas-special .chapter-time { color: #c6a4e8 !important; }
+    .christmas-special .special-diamond {
+      color: #c99af0 !important;
+      font-size: 1.6em;
+      line-height: 1;
+      margin-left: 3px;
+      text-shadow: 0 0 8px rgba(168, 121, 214, .55);
+    }
+    .christmas-special.coming-soon { opacity:.62; cursor:not-allowed; }
+    .christmas-special.coming-soon .chapter-meta { color:#aaa !important; }
+    .christmas-special.coming-soon .coming-soon-label { color:#aaa; font:11px monospace; white-space:nowrap; }
+    .christmas-special .special-price {
+      margin-left: auto;
+      margin-right: 0;
+      color: #c99af0 !important;
+      font-weight: 900;
+      font-size: 1.08em;
+      text-shadow: 0 0 8px rgba(168, 121, 214, .3);
+      white-space: nowrap;
+    }
+
+    #chapter-index .special-price,
+    #chapter-index .chapter-price {
+      color: #c99af0 !important;
+      font-weight: 900 !important;
+      font-size: 1.08em;
+      text-shadow: 0 0 8px rgba(168, 121, 214, .3);
+      white-space: nowrap;
+    }
+
+/* Passarel·la de pagament dels capítols especials */
+#payment-page { z-index:40; overflow-y:auto; align-items:flex-start; }
+.payment-card { width:min(620px,100%); margin:auto; padding:26px 22px; background:#191c1f; border:1px solid #39d878; border-radius:14px; box-shadow:0 20px 70px #000b; }
+.payment-heading { color:#39d878; font:11px monospace; letter-spacing:3px; text-align:center; margin-bottom:9px; }
+.payment-title { color:var(--paper); font:normal clamp(24px,5vw,32px) Georgia,serif; text-align:center; margin:0 0 8px; }
+.payment-intro { color:var(--muted); font:12px/1.5 monospace; text-align:center; margin:0 0 20px; }
+.price-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.price-option { min-height:155px; padding:17px 14px; border:1px solid #4a5050; border-radius:11px; background:#202528; text-align:left; display:flex; flex-direction:column; align-items:flex-start; gap:9px; letter-spacing:0; }
+.price-option.selected { border:2px solid #39d878; background:rgba(57,216,120,.10); box-shadow:0 0 18px rgba(57,216,120,.13); }
+.price-option .option-name { color:var(--paper); font:14px/1.35 Georgia,serif; letter-spacing:0; }
+.price-option .option-detail { color:var(--muted); font:10px/1.4 monospace; letter-spacing:0; }
+.price-option .option-price { color:#39d878; font:bold 25px Georgia,serif; margin-top:auto; }
+.payment-subheading { color:var(--muted); font:10px monospace; letter-spacing:2px; margin:22px 0 10px; text-align:center; }
+.payment-methods { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+.payment-method { min-height:76px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:7px; padding:9px 5px; border:1px solid #4a5050; border-radius:9px; background:#202528; letter-spacing:0; }
+.payment-method.selected { border:2px solid #39d878; background:rgba(57,216,120,.09); }
+.payment-method svg { width:74px; height:28px; }
+.payment-method .method-label { color:#ddd; font:10px monospace; letter-spacing:.5px; }
+#pay-button { width:100%; margin-top:18px; min-height:52px; color:#07150c; background:#39d878; border:1px solid #39d878; font-weight:bold; font-size:12px; }
+#pay-button:hover { background:#59ed91; }
+#payment-back { width:100%; margin-top:9px; }
+.payment-disclaimer { color:#777; font:9px/1.5 monospace; text-align:center; margin:14px 4px 0; }
+@media(max-width:620px) { .price-options { grid-template-columns:1fr; } .price-option { min-height:120px; } .payment-card { padding:22px 16px; } }
+
+
+
+</style>
 </head>
 <body>
 <header>
@@ -104,23 +447,22 @@
           <a class="index-quick-button instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Obrir Instagram" title="Instagram">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.6 6.5h.01"/></svg>
           </a>
-          <button type="button" class="index-quick-button" id="account-open" aria-label="Obrir compte d'usuari" title="Compte d'usuari">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c.5-4.2 3.5-6.5 8-6.5s7.5 2.3 8 6.5"/></svg>
-          </button>
         </div>
       </div>
     </div>
     <button type="button" class="specials-toggle" id="specials-toggle" aria-expanded="false" aria-controls="specials-list"><span>✦</span> Especials <span class="specials-chevron" aria-hidden="true">⌄</span></button>
     <div id="specials-list" class="specials-list" hidden>
-      <button type="button" class="chapter-choice available christmas-special" id="chapter-special" data-chapter="7"><span class="chapter-name">Especial: 🩲 Mariajo pegging</span><span class="chapter-meta"><span class="chapter-time" id="time-seven">◷ —</span><span class="special-price">0,99€</span><span class="special-diamond" aria-hidden="true">◆</span></span></button>
+      <button type="button" class="chapter-choice available christmas-special mariajo-special" id="chapter-special"><span class="mariajo-special-info"><span class="chapter-name">Especial: 🩲 Mariajo pegging</span><span class="chapter-meta"><span class="chapter-time" id="time-seven">◷ —</span><span class="special-price">0,99€</span></span></span><img class="mariajo-special-photo" src="assets/mariajo-foto.jpg" alt="Fotografia de Mariajo" loading="lazy"></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-rossa" disabled aria-disabled="true"><span class="chapter-name">Especial: 💃🏻 Maribel, rossa i gitana</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-veina" disabled aria-disabled="true"><span class="chapter-name">Especial: 🏢 Maribel veïna</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
     </div>
     <button type="button" class="chapter-choice in-progress" id="chapter-one"><span class="chapter-name">Capítol I: Compartir és hippy</span><span class="chapter-meta"><span class="chapter-time" id="time-one">◷ —</span><span id="chapter-one-status">● En curs · reprendre</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-two"><span class="chapter-name">Capítol II: Sandra i Marc</span><span class="chapter-meta"><span class="chapter-time" id="time-two">◷ —</span><span class="chapter-arrow" id="chapter-two-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-three"><span class="chapter-name">Capítol III: Laia la del poble</span><span class="chapter-meta"><span class="chapter-time" id="time-three">◷ —</span><span class="chapter-arrow" id="chapter-three-status" aria-hidden="true">›</span></span></button>
+    <button type="button" class="chapter-choice locked" id="chapter-seven" disabled aria-disabled="true"><span class="chapter-name">Capítol VII: Les bessones (Clickbait)</span></button>
 
     <button type="button" class="back-button" id="admin-open">⚙ Administració</button>
+    <div class="admin-logo-wrap" aria-label="Logo informatiu"><img src="assets/anti-porno-logo.jpg" alt="Logo anti porno" width="15" height="15" style="width:15px;height:15px;object-fit:contain;display:block;margin:8px auto 0"></div>
   </div>
   <div class="reading-stats floating-reading-stats" aria-live="polite">
       <div class="stats-grid">
@@ -140,25 +482,6 @@
     </ol>
     <p>Si has obert ELLES des d'un fitxer descarregat, primer cal publicar-lo en una adreça web perquè la drecera funcioni com un enllaç permanent.</p>
     <button type="button" class="shortcut-close" id="shortcut-close">Entesos</button>
-  </section>
-</div>
-
-<div id="account-page" class="overlay" hidden>
-  <section class="account-card" role="dialog" aria-modal="true" aria-labelledby="account-title">
-    <div class="admin-top"><h2 id="account-title">ELLES · COMPTE D'USUARI</h2><button type="button" id="account-close" aria-label="Tancar">✕</button></div>
-    <h3>INFORMACIÓ PERSONAL</h3>
-    <label for="account-firstname">Nom</label><input id="account-firstname" autocomplete="given-name" placeholder="El teu nom">
-    <label for="account-lastname">Cognoms</label><input id="account-lastname" autocomplete="family-name" placeholder="Els teus cognoms">
-    <div class="account-actions"><button type="button" id="account-save">Guardar dades</button></div>
-    <p class="account-note" id="account-profile-status" aria-live="polite">Les dades es guarden en aquest dispositiu.</p>
-    <h3>LES MEVES COMANDES</h3>
-    <div class="account-list" id="account-orders">Encara no tens cap comanda registrada.</div>
-    <p class="account-note">Les compres d'ELLES encara són en mode demostració. No es processen pagaments reals ni es generen comandes confirmades.</p>
-    <h3>MISSATGE A L'ADMINISTRADOR</h3>
-    <label for="account-message-subject">Assumpte</label><input id="account-message-subject" maxlength="100" placeholder="Assumpte del missatge">
-    <label for="account-message-body">Missatge</label><textarea id="account-message-body" maxlength="2000" placeholder="Escriu aquí el teu missatge..."></textarea>
-    <div class="account-actions"><button type="button" id="account-send-message">Enviar missatge</button></div>
-    <p class="account-note" id="account-message-status" aria-live="polite">El missatge quedarà a la safata local d'aquest dispositiu. Per enviar-lo a l'administrador cal connectar ELLES a un servidor o servei de correu.</p>
   </section>
 </div>
 
@@ -224,14 +547,13 @@
       <option value="4">Capítol IV · Laia la Punky</option>
       <option value="5">Capítol V · El cul de la Gemma</option>
       <option value="6">Capítol VI · Míriam número 1</option>
-      <option value="7">Especial · Mariajo pegging</option>
+      <option value="7">Capítol VII · Les bessones (Clickbait)</option>
+      <option value="8">Especial · Mariajo pegging</option>
     </select>
     <label for="admin-file">Pujar un arxiu de text (.txt)</label><input id="admin-file" type="file" accept=".txt,text/plain">
     <label for="admin-text">O enganxar el text del capítol</label><textarea id="admin-text" placeholder="Enganxa aquí el text original del capítol..."></textarea>
     <div class="admin-actions"><button type="button" id="admin-save-chapter">Guardar capítol</button><button type="button" id="admin-show-stats">Estadístiques</button></div>
     <p class="admin-note" id="admin-save-message">El text es desa en aquest navegador i queda disponible en tornar a obrir aquest fitxer al mateix dispositiu.</p>
-    <div class="admin-actions"><button type="button" id="admin-show-messages">Missatges dels lectors</button></div>
-    <div class="admin-stats" id="admin-messages" hidden></div>
     <div class="admin-stats" id="admin-stats" hidden><strong>LECTORS ÚNICS PER CAPÍTOL</strong><br>No hi ha dades de visites disponibles.<br><br><strong>ZONA GEOGRÀFICA</strong><br>No es pot determinar des d'un HTML local. Per obtenir lectors únics i zones cal publicar ELLES amb un servidor i activar analítica respectuosa amb el consentiment dels lectors.</div>
     <p class="admin-note">Nota de seguretat: aquest accés és una barrera visual dins del fitxer HTML, no una autenticació segura de servidor.</p>
   </section>
@@ -240,6 +562,675 @@
   <button type="button" id="wake-book" aria-label="Tornar a activar el llibre">...</button>
 </div>
 <footer></footer>
-<script src="/assets/js/app.js" defer></script>
+<script>
+let text = `No hi ha manera possible d'escriure el que he de dir sense que et caigui malament i em jutgis de seguida.
+
+A la vida he tingut sempre dues fixacions, les dones i l'alcohol. Bàsicament tot el demés careix d'importància per mi.
+
+Una de les millors coses de la meva vida és que no recordo si en algun moment vaig creure en Déu. La llibertat que em van donar els pares i l'educació laica i progressista van ajudar-me amb el temps a ser qui sóc. Una persona alliberada del món convencional i un nihilista sense crisi d'identitat. L'únic que em persegueixes i possiblement em persegurà sempre és: Sóc un narcisista, estimo bé als demés?
+
+El món hetero normatiu ens persegueix des de petits, sobretot si has nascut al segle XX.
+
+A l'escola bressol si em feia amic d'alguna nena als pares els hi feia gràcia i deien que érem novios. Però avancem una mica.
+
+A la tendra edat de vuit anys, la Sandra estava enamorada de mi. A l'escola, sota la porxada una tal Meritxell va venir directe cap a mi i em va fer un petó a la boca. Em va impressionar, era molt bufona. La Sandra en veure que em podia perdre va venir cap a mi i em va posar la llengua dins la boca.
+
+No sé si aquest acte va fer que normalitzés que ningú és propietat. Ja que després de la Sandra jo encara esperava que vinguessin algunes més a besar-me. Un petit monstre narcisista creixia dins meu.
+
+Van passar quatre dolorosos anys fins que vaig rebre un altre petó. De nou, l'atrevida Sandra.`;
+const chapterOneText = text;
+const chapterTwoText = `Havien passat quatre anys, quatre anys de sequia, de desamors, plors i odi. Ningú m'havia tornar a donar un petó. Tenia dotze anys i les meves companyes ja tenien pits. Jo em moria de ganes de tocar algun pit i evidentment d'enterrar la sardina. 
+A l'escola, durant la projecció censurada de A la recerca del foc (1981, Jean-Jacques Annaud) la Sandra i jo ens vam amagar al final de l'aula.
+-Sandra, m'ensenyes les tetes? 
+-Si tu m'ensenyes el teu pito, sí.
+El millor intercanvi que havia fet fins eloment. 
+Durant aquell curs quan projectaven una pel·lícula, el cos de la Sandra i el meu entraven en ebullició i ens escapaven a fotre'ns mà. En tocàvem totes les parts, ens donàvem algun petó i ràpidament tornàvem a les nostres cadires per no ser enxampats per el professor.
+En una de les nostres sessions a les fosques va aparèixer en Marc.
+-Ep jo també vull.
+Vam explicar-li les nostres normes d'intercanvi i va acceptar. Trobava curiós tocar a un home, no em desagradava però m'agradava que ell em toques també. Teníem allà montat un petit ménage à trois que feia que l'escola fos divertida.
+Desgraciadament en Marc va començar a passar les fronteres de la Sandra i meves. Volia tocar-nos a totes hores i anar més lluny. Ens incomodava, així que vam partir peres.
+Poc després la Sandra i jo vam parar la nostra exploració i jo encara anava més calent que mai. Havia tingut la mel a la boca, necessitava més mandanga.`;
+const chapterThreeText = `L'estiu em separava de la meva estimada ciutat. Allà on hi havia un munt de dones i homes guapíssims.
+Teníem una petita xabola amb una bassa, allà passava les hores enfilat damunt dels arbres, construint armes ninja i voltant per els carrers de la urbanització.
+Em vaig fer amic d'un marrec,.tots dos estàvem fascinats per Bruce Lee, Jackie Chan i tot el que tenia a veure amb arts marcials. Molt humilment vaig acceptar ser el seu sensei.
+Però ell tenia molt més per oferir-me i jo no sabia. Vivia en una de les millors cases de l'indret. Una piscina guapíssima i un celler de vi. Per arrodonir aquell cop de sort, tenia una germana de tretze anys, una coetània.
+La Laia era dolça i tenia uns ulls increïbles, dos cristalls de Murano incrustats en un rostre de porcellana. Molt educada amb tothom menys amb el seu germà. M'atreia quan deia paraulotes i li donava puntades de peu al germà. Es comportava com un homenot. Era més béstia que jo.
+En una d'aquelles tardes, vam entrar al celler a fer uns tastets de les botes. Suposo que una devia ser un criança i l'altre un vi jove. El fet és que aprofitant la tonteria vam anar a córrer per el camp com dos ximplets.
+De sobte la Laia em fa una trabanqueta i caic damunt aquella herba alta. Quan em vaig disposar a aixecar-me, tenia la Laia damunt meu. Es va apropar i ens vam morrejar fins que el seu pare ens va descobrir. Ens va renyar per el vi i va deixar passar el nostre romance.
+Però la fortuna és efímera, el dia següent tornàvem a.ciutat. L'estiu havia acabat i jo encara no havia fotut un clau.`;
+const chapterFourText = `Era 1995, trobava a faltar en Kurt Cobain i estava tot el dia fumat mirant la MTV. Quan sortia de casa anava a assajar al local amb el grup de música. Els caps de setmana sortiem per el barri Gòtic, ens emborratxavem, ens enrotllaven i jo sovint dormia al carrer fins que alguna amiga em portava fins al metro perquè tornès a casa. 
+Havia passat un any molt dur, molta introspecció i cap dona a la meva vida. 
+No agradava a ningú. Jo m'autoconvecia que si em convertia en un bon músic compensaria la cara de pizza que tenia. Rebia classes de guitarra i feia solfeig a l'orfeó. Coneixia tot tipus de música, comprava revistes i penjava pòsters al dormitori de "pajillero" infinit. La meva col·lecció de casetes i CDs era envejable.
+Un estrany dia que no vaig fer campana a l'institut vaig conèixer la Laia Pumky.
+Duia trenes al cap al estil Dexter Hollan (The Offspring), els pantalons escosesos popularitzats per Vivienne Westwood i evidentment imperdibles i ferros d'encenedor a la jupa de cuir. Un piercing al nas i pulseres sadomaso. 
+Era descarada, en menys de cinc minuts ja va insinuar que buscava l'amor i que jo tenia tot allò que buscava.
+Vam tardar un parell de dies, sobretot per culpa meva, no tenia valor de fer el primer pas. Afortunadament no vaig tardar gaire en introduir la meva llengua dins la seva boca.
+La setmana següent vam comprar mig quilogram d'haixis per guanyar una mica de pasta. Vam anar a casa seva. La meva sorpresa va ser veure en quina normalitat tenia la seva mare d'observar-nos tallar tals quantitats. De fet, la vella ens va robar uns quants grams.
+Era jove innocent, no em vaig adonar de com estava de penjada fins que va aparèixer d'espit fins les celles. Rosegava compulsivament un encenedor fins que li va explorar a la boca.
+-Ostres, un altre cop? -va dir una de les seves amigues.
+La Laia també desapareixia dos o tres dies sense avisar a ningú. La sogra em trucava desesperada i havia d'anar al consolar-la. 
+Sense adonar-me havia perdut tota atracció sexual cap a ella. Sabia que volia follar però tot i així, no sé perquè vaig decidir deixar-la abans de fornicar. Suposo que sabia que un minut després de fer sexe amb ella la deixaria i ho trobava despreciable. Al cap i a la fi no era tant mala persona com creia.`;
+const chapterMariajoText = `És una pràctica habitual en mi acabar al llit borratxo i obrir APPs de cites. 
+En una d'aquestes nits vaig fer un match amb la Mariajo. Una dona oberta de ment i sense pèls a la llengua a l'hora de parlar de sexe. No vam tardar gaire en fer sexting. Quina delícia escriure les teves fantasies i que et comparteixin els seus desitjos. Quin art literari quan dius la, et repasso el cos amb uns dits fins arribar al teu entrcuix.
+Vam dir de quedar, jo no estava convençut. Per una part, sóc un urbanita empedreït i hauria de desplaçar-me en un poble de comarca. I en segon lloc, de vegades una fantasia és millor que quedi en l'imaginari. Ho dic per experiència.
+Vaig anul·lar la cita amb alguna excusa però la nostre ciber relació sexual continuava. Vam fer una videotrucada per mirar-nos als ulls en el moment que entràvem al clímax. No ens va acabar de convèncer a cap dels dos. Apart ella deia que sinó mirava hentai de mostres amb tentacles, no podia corre's sola.
+En una de les nostres converses em va explicar el sexe amb la seva antiga parella que era una dona. I llavors em.vaig iluminar.
+-Feieu pegging?!
+Sí que en feien. Va dir que li agradava i que mai ho havia fet amb un home. La meva pròstata es va excitar, de seguida estàvem tots dos buscant models de strap-on. Un cop pagada la comanda vaig començar a fantasejar, quasi no dormo aquella nit. Mai havia viscut aquella experiència i era.el moment. Tenia quaranta-sis anys.
+Vam fixar de nou una cita, aquest cop vaig pujar al.tren sense pensar-ho. Amb el strap-on a la motxilla amb la sensació que portava una bomba i que cap passatger podia saber-ho.`;
+const chapterSevenText = ""; // Capítol VII creat, pendent d’incorporar-hi el text.
+const chapterTitles = {1:"Compartir és hippy",2:"Sandra i Marc",3:"Laia la del poble",4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1",7:"Les bessones (Clickbait)",8:"Especial: Mariajo pegging"};
+const chapterTexts = {1:chapterOneText,2:chapterTwoText,3:chapterThreeText,4:chapterFourText,7:chapterSevenText,8:chapterMariajoText};
+let currentChapter = 1;
+
+const story = document.getElementById("story");
+const scene = document.getElementById("scene");
+const status = document.getElementById("status");
+const progress = document.getElementById("progress");
+const remaining = document.getElementById("remaining");
+const startButton = document.getElementById("start");
+const nextButton = document.getElementById("next");
+const previousButton = document.getElementById("previous");
+const completeModal = document.getElementById("complete-modal");
+const chapterIndex = document.getElementById("chapter-index");
+const specialsToggle = document.getElementById("specials-toggle");
+const specialsList = document.getElementById("specials-list");
+specialsToggle.addEventListener("click", () => {
+  const expanded = specialsToggle.getAttribute("aria-expanded") === "true";
+  specialsToggle.setAttribute("aria-expanded", String(!expanded));
+  specialsList.hidden = expanded;
+});
+const indexScrollPanel = chapterIndex.querySelector(".index-card");
+const floatingStats = chapterIndex.querySelector(".floating-reading-stats");
+let statsScrollFrame = false;
+indexScrollPanel.addEventListener("scroll", () => {
+  if (statsScrollFrame) return;
+  statsScrollFrame = true;
+  floatingStats.classList.remove("is-scrolling");
+  void floatingStats.offsetWidth;
+  floatingStats.classList.add("is-scrolling");
+  requestAnimationFrame(() => { statsScrollFrame = false; });
+}, { passive:true });
+floatingStats.addEventListener("animationend", event => {
+  if (event.animationName === "stats-scroll-motion") floatingStats.classList.remove("is-scrolling");
+});
+const shortcutHelp = document.getElementById("shortcut-help");
+document.getElementById("shortcut-open").addEventListener("click", () => { shortcutHelp.hidden = false; });
+document.getElementById("shortcut-close").addEventListener("click", () => { shortcutHelp.hidden = true; });
+shortcutHelp.addEventListener("click", (event) => { if (event.target === shortcutHelp) shortcutHelp.hidden = true; });
+const tomorrowScreen = document.getElementById("tomorrow-screen");
+const themeToggle = document.getElementById("theme-toggle");
+themeToggle.addEventListener("click", () => {
+  const light = document.body.classList.toggle("light-reading");
+  themeToggle.textContent = light ? "☾" : "☀";
+  themeToggle.setAttribute("aria-pressed", String(light));
+});
+
+let position = 0, chunkEnd = 0, timer = null, playing = false, started = false;
+let completionPending = false;
+let chapterOneCompleted = false;
+let readingStartedAt = null;
+let totalWordCount = text.trim().split(/\s+/).filter(Boolean).length;
+const chunkHistory = [0];
+
+const scenes = [
+  `<svg viewBox="0 0 240 90"><circle class="line" cx="78" cy="34" r="19"/><path class="line" d="M78 53v27m-13-9h26"/><path class="line" d="M157 8h10v12l-2 5v5c8 5 11 12 11 22v17c0 4-3 7-7 7h-14c-4 0-7-3-7-7V52c0-10 3-17 11-22v-5l-2-5V8Z"/><path class="line" d="M157 8h10m-17 39h26"/><path class="soft" d="M149 47h27v22c0 4-3 7-7 7h-14c-4 0-7-3-7-7V47Z"/></svg>`,
+  `<svg viewBox="0 0 240 90"><path class="line" d="M82 17h27v8l-4 5v42H86V30l-4-5Z"/><path class="line" d="M86 52h19M95 17v-6h-8"/><path class="soft" d="M86 52h19v20H86z"/><path class="line" d="M145 19c-13 13-13 29 0 42 13-13 13-29 0-42Zm0 42v15m-12 0h24"/></svg>`,
+  `<svg viewBox="0 0 240 90"><circle class="line" cx="120" cy="39" r="24"/><path class="line" d="M111 37h2m14 0h2m-17 12c5 5 12 5 17 0"/><path class="line" d="M120 63v14m-18 0h36"/><path class="soft" d="M120 15a24 24 0 0 1 0 48Z"/></svg>`,
+  `<svg viewBox="0 0 240 90"><path class="line" d="M62 70V19h116v51M76 31h88M76 43h88M76 55h88"/><path class="line" d="M108 70V54a12 12 0 0 1 24 0v16"/><path class="soft" d="M62 19h116v9H62z"/></svg>`,
+  `<svg viewBox="0 0 240 90"><circle class="line" cx="96" cy="27" r="10"/><circle class="line" cx="143" cy="27" r="10"/><path class="line" d="M78 70V57a18 18 0 0 1 36 0v13m11 0V57a18 18 0 0 1 36 0v13"/><path class="line" d="M113 42h14m-7-7v14"/></svg>`,
+  `<svg viewBox="0 0 240 90"><path class="line" d="M82 29c9-14 24-14 33 0 9-14 24-14 33 0 0 22-33 42-33 42S82 51 82 29Z"/><path class="line" d="M107 41c5-5 11-5 16 0m-16 0c5 6 11 6 16 0"/><path class="soft" d="M82 29c9-14 24-14 33 0 9-14 24-14 33 0 0 22-33 42-33 42S82 51 82 29Z"/></svg>`,
+  `<svg viewBox="0 0 240 90"><circle class="line" cx="120" cy="44" r="31"/><path class="line" d="M120 13v8m0 46v8M89 44h8m46 0h8M98 22l6 6m32 32 6 6m0-44-6 6m-32 32-6 6"/><path class="line" d="M120 28v17l12 8"/><path class="soft" d="M120 13a31 31 0 0 1 0 62Z"/></svg>`
+];
+
+// Administració local: les credencials al codi del navegador no substitueixen un servidor segur.
+const adminUser = "Sid";
+const adminPassword = "Pueblo33@!";
+const adminLogin = document.getElementById("admin-login");
+const adminPanel = document.getElementById("admin-panel");
+const adminMessage = document.getElementById("admin-login-message");
+function estimateReadingTime(value) {
+  const words = value.trim().split(/\s+/).filter(Boolean).length;
+  return words ? `◷ ${Math.max(1, Math.ceil(words / 200))} min` : "◷ —";
+}
+function renderChapterListRatings() {
+  const saved = getChapterRatings();
+  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",8:"chapter-special"};
+  for (const [number, id] of Object.entries(ids)) {
+    const button = document.getElementById(id);
+    const meta = button?.querySelector(".chapter-meta");
+    const time = meta?.querySelector(".chapter-time");
+    if (!meta || !time) continue;
+    let summary = meta.querySelector(".chapter-rating-summary");
+    const value = Number(saved[number]) || 0;
+    if (!value) { summary?.remove(); continue; }
+    if (!summary) {
+      summary = document.createElement("span");
+      summary.className = "chapter-rating-summary";
+      meta.insertBefore(summary, time.nextSibling);
+    }
+    summary.textContent = `★ ${value}/5`;
+    summary.setAttribute("aria-label", `Valoració: ${value} de 5 estrelles`);
+    summary.title = `Valoració: ${value} de 5 estrelles`;
+  }
+}
+function refreshChapterMenu() {
+  for (let n=2;n<=6;n++) {
+    const suffix=["","","two","three","four","five","six"][n];
+    let button=document.getElementById(`chapter-${suffix}`);
+    if (!button && n>3) {
+      const names={4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1"};
+      button=document.createElement("button"); button.type="button"; button.id=`chapter-${suffix}`;
+      button.className="chapter-choice locked";
+      button.innerHTML=`<span class="chapter-name">Capítol ${["","","","","IV","V","VI"][n]}: ${names[n]}</span><span class="chapter-meta"><span class="chapter-time" id="time-${suffix}">◷ —</span><span class="chapter-arrow" id="chapter-${suffix}-status" aria-hidden="true">›</span></span>`;
+      button.addEventListener("click",()=>loadChapter(n));
+      const chapterSeven=document.getElementById("chapter-seven"); const indexBack=document.getElementById("admin-open"); chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven || indexBack);
+    }
+    if (button && chapterTexts[n]) {
+      button.className="chapter-choice available";
+      const status=button.querySelector(`#chapter-${suffix}-status`);
+      // No substituir chapter-meta: conté el temps estimat de lectura.
+      if(status) status.textContent="›"; status.classList.add("chapter-arrow");
+    }
+  }
+  const chapterSevenButton=document.getElementById("chapter-seven");
+  if (chapterSevenButton) {
+    const hasText=typeof chapterTexts[7] === "string" && chapterTexts[7].trim().length>0;
+    chapterSevenButton.disabled=!hasText;
+    chapterSevenButton.setAttribute("aria-disabled",String(!hasText));
+    chapterSevenButton.className=`chapter-choice ${hasText ? "available" : "locked"}`;
+    if (hasText && !chapterSevenButton.dataset.openHandler) {
+      chapterSevenButton.addEventListener("click",()=>loadChapter(7));
+      chapterSevenButton.dataset.openHandler="true";
+    }
+  }
+  for (const n of [1,2,3,4,5,6,8]) {
+    const suffix=["","one","two","three","four","five","six","seven","seven"][n];
+    const time=document.getElementById(`time-${suffix}`);
+    if(time) time.textContent=estimateReadingTime(chapterTexts[n] || "");
+  }
+  renderChapterListRatings();
+}
+try {
+  const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}");
+  // Migra el text especial antic del número 7 a la clau interna 8.
+  if (typeof saved["7"] === "string" && saved["7"].trim() && !saved["8"]) { saved["8"]=saved["7"]; delete saved["7"]; localStorage.setItem("elles_admin_chapters",JSON.stringify(saved)); }
+  for (const [key,value] of Object.entries(saved)) if (chapterTitles[key] && typeof value==="string" && value.trim()) chapterTexts[key]=value;
+} catch(e) {}
+refreshChapterMenu();
+document.getElementById("admin-open").addEventListener("click",()=>{chapterIndex.hidden=true;adminLogin.hidden=false;});
+document.getElementById("admin-login-close").addEventListener("click",()=>adminLogin.hidden=true);
+document.getElementById("admin-login-submit").addEventListener("click",()=>{
+  const u=document.getElementById("admin-user").value, p=document.getElementById("admin-pass").value;
+  if(u===adminUser && p===adminPassword){adminLogin.hidden=true;adminPanel.hidden=false;adminMessage.textContent="Accés correcte.";}
+  else adminMessage.textContent="Usuari o clau incorrectes.";
+});
+document.getElementById("admin-close").addEventListener("click",()=>adminPanel.hidden=true);
+document.getElementById("admin-file").addEventListener("change",async e=>{
+  const file=e.target.files?.[0]; if(!file)return;
+  document.getElementById("admin-text").value=await file.text();
+  document.getElementById("admin-save-message").textContent=`Arxiu carregat: ${file.name}. Prem «Guardar capítol» per incorporar-lo.`;
+});
+document.getElementById("admin-save-chapter").addEventListener("click",()=>{
+  const n=Number(document.getElementById("admin-chapter").value), value=document.getElementById("admin-text").value;
+  if(!value.trim()){document.getElementById("admin-save-message").textContent="Enganxa o selecciona primer un text.";return;}
+  chapterTexts[n]=value;
+  try { const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}"); saved[n]=value; localStorage.setItem("elles_admin_chapters",JSON.stringify(saved)); }
+  catch(e){document.getElementById("admin-save-message").textContent="No s'ha pogut desar al navegador. Comprova l'espai o els permisos.";return;}
+  document.getElementById("admin-save-message").textContent=`Capítol ${n} guardat correctament en aquest navegador.`;
+  refreshChapterMenu();
+});
+document.getElementById("admin-show-stats").addEventListener("click",()=>{document.getElementById("admin-stats").hidden=false;});
+
+function updateScene() {
+  if (currentChapter === 2) {
+    // Una il·lustració simbòlica per a cada fragment real del capítol II.
+    // El recompte es basa en els salts de línia del text, no en índexs aproximats.
+    const chapterTwoScenes = [
+      `<svg viewBox="0 0 240 90"><path class="line" d="M120 76 54 32C25 8 3 45 27 65l93 18 93-18c24-20 2-57-27-33Z"/><path class="line" d="m106 12-9 23 18 9-13 16 18 16 8-24-15-10 12-17-19-13Z"/><path class="soft" d="M120 76 54 32C25 8 3 45 27 65l93 18 93-18c24-20 2-57-27-33Z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><rect class="line" x="35" y="19" width="170" height="52" rx="4"/><circle class="line" cx="62" cy="45" r="15"/><circle class="line" cx="62" cy="45" r="5"/><path class="line" d="M77 45h96m-18-9 18 9-18 9M112 19v52"/><path class="soft" d="M112 19h93v52h-93z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><path class="line" d="M28 20h82a12 12 0 0 1 12 12v23a12 12 0 0 1-12 12H68L48 81V67H28a12 12 0 0 1-12-12V32a12 12 0 0 1 12-12Z"/><path class="line" d="M137 18h75a12 12 0 0 1 12 12v23a12 12 0 0 1-12 12h-8v14l-20-14h-47a12 12 0 0 1-12-12V30a12 12 0 0 1 12-12Z"/><path class="soft" d="M28 20h82a12 12 0 0 1 12 12v23H16V32a12 12 0 0 1 12-12Z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><path class="line" d="M35 70V25h170v45M48 38h144M48 51h144"/><circle class="line" cx="85" cy="31" r="7"/><circle class="line" cx="155" cy="31" r="7"/><path class="line" d="M85 39v18m-10-8h20m60-10v18m-10-8h20"/><path class="soft" d="M35 25h170v13H35z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><circle class="line" cx="75" cy="28" r="12"/><circle class="line" cx="165" cy="28" r="12"/><circle class="line" cx="120" cy="20" r="12"/><path class="line" d="M50 75V61a25 25 0 0 1 50 0v14m40 0V61a25 25 0 0 1 50 0v14m-45-43h-20m10-10v20"/><path class="soft" d="M105 20a15 15 0 0 1 30 0v9h-30z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><path class="line" d="M24 45h78m36 0h78"/><path class="line" d="m91 34 11 11-11 11m58-22-11 11 11 11"/><path class="line" d="M120 12v66"/><path class="soft" d="M111 12h18v66h-18z"/></svg>`,
+      `<svg viewBox="0 0 240 90"><path class="line" d="M42 70V22h64v48m28 0V22h64v48M52 32h44m-44 12h44m-44 12h24m52-24h44m-44 12h44m-44 12h24"/><path class="line" d="M112 70h16m-8-8v16"/><path class="soft" d="M42 22h64v10H42zm92 0h64v10h-64z"/></svg>`
+    ];
+    const visibleFragment = text.slice(0, position);
+    const fragmentIndex = Math.min(visibleFragment.split(/\n+/).length - 1, chapterTwoScenes.length - 1);
+    scene.innerHTML = chapterTwoScenes[Math.max(0, fragmentIndex)];
+    return;
+  }
+
+  const paragraphStarts = [];
+  const separator = /\n\n/g;
+  let match;
+  while ((match = separator.exec(text)) !== null) paragraphStarts.push(match.index + match[0].length);
+  let index = 0;
+  for (let i = 0; i < paragraphStarts.length; i++) {
+    if (position >= paragraphStarts[i]) index = i + 1;
+  }
+  scene.innerHTML = scenes[Math.max(0, Math.min(index, scenes.length - 1))];
+}
+
+// Recompte acumulat de paraules llegides: cada paraula només compta una vegada
+// per capítol, encara que l'usuari retrocedeixi o torni a obrir el llibre.
+function getWordsReadByChapter() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("elles_words_read_by_chapter") || "{}");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch (e) { return {}; }
+}
+function updateCumulativeWordsRead() {
+  const saved = getWordsReadByChapter();
+  const chapterKey = String(currentChapter);
+  const wordsAtPosition = text.slice(0, position).trim().split(/\s+/).filter(Boolean).length;
+  const previous = Number(saved[chapterKey]) || 0;
+  saved[chapterKey] = Math.max(previous, wordsAtPosition);
+  try { localStorage.setItem("elles_words_read_by_chapter", JSON.stringify(saved)); } catch (e) {}
+  return Object.values(saved).reduce((sum, value) => sum + Math.max(0, Number(value) || 0), 0);
+}
+function getReadChapters() {
+  try { const value = JSON.parse(localStorage.getItem("elles_read_chapters") || "[]"); return Array.isArray(value) ? value.map(Number) : []; } catch(e) { return []; }
+}
+function getAvailableChapterNumbers() {
+  return [1,2,3,4,5,6,7].filter(n => typeof chapterTexts[n] === "string" && chapterTexts[n].trim().length > 0);
+}
+function updateChapterCount() {
+  const available = getAvailableChapterNumbers();
+  const read = new Set(getReadChapters());
+  const completed = available.filter(n => read.has(n)).length;
+  const counter = document.getElementById("reading-chapters");
+  if (counter) counter.textContent = `${completed} / ${available.length}`;
+}
+function updateReadingStats() {
+  const elapsed = readingStartedAt ? Math.max(0, Math.floor((Date.now() - readingStartedAt) / 1000)) : 0;
+  const hours = Math.floor(elapsed / 3600);
+  const minutes = Math.floor((elapsed % 3600) / 60);
+  const seconds = elapsed % 60;
+  const timeText = hours > 0
+    ? `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`
+    : `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+  const wordsRead = updateCumulativeWordsRead();
+  const percent = Math.floor((position / text.length) * 100);
+  document.getElementById("reading-time").textContent = timeText;
+  document.getElementById("reading-total-words").textContent = wordsRead.toLocaleString("ca-ES");
+  updateChapterCount();
+}
+function updateProgress() {
+  const left = Math.ceil(((text.length - position) / text.length) * 100);
+  progress.style.width = (100 - left) + "%";
+  remaining.textContent = left + "% FALTA PER ACABAR CAPÍTOL";
+}
+function removeMarker() {
+  story.classList.remove("can-continue");
+  story.querySelector(".cursor")?.remove();
+  story.querySelector(".pause-dots")?.remove();
+}
+function appendCursor() {
+  removeMarker();
+  const c = document.createElement("span");
+  c.className = "cursor"; c.textContent = "▍"; story.appendChild(c);
+}
+function appendDots() {
+  removeMarker();
+  const d = document.createElement("span");
+  d.className = "pause-dots"; d.textContent = "...";
+  d.setAttribute("aria-label","Pausa"); story.appendChild(d);
+  story.classList.add("can-continue");
+}
+function fits(candidate) {
+  story.textContent = candidate;
+  return story.scrollHeight <= story.clientHeight + 1;
+}
+function findChunkEnd(preserveStory = false) {
+  const available = text.length - position;
+  let low = 1, high = available, best = 0;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    // Reservem quatre espais i els tres punts intermitents abans del límit.
+    if (fits(text.slice(position, position + mid) + "    ...")) {
+      best = mid; low = mid + 1;
+    } else high = mid - 1;
+  }
+  // Ajustem el tall fins al darrer espai disponible: mai no partim una paraula.
+  if (best < available) {
+    const candidate = text.slice(position, position + best);
+    const lastSpace = Math.max(
+      candidate.lastIndexOf(" "),
+      candidate.lastIndexOf("\\n"),
+      candidate.lastIndexOf("\\t")
+    );
+    if (lastSpace > 0) {
+      best = lastSpace + 1;
+    } else {
+      // Si la primera paraula és llarga, busquem el final sencer de la paraula.
+      const nextSpace = text.slice(position).search(/[ \\n\\t]/);
+      if (nextSpace >= 0) best = nextSpace + 1;
+      else best = available;
+    }
+  }
+  if (best === 0) best = Math.min(available, 1);
+  if (!preserveStory) story.textContent = "";
+  chunkEnd = Math.min(text.length, position + best);
+}
+let chunkTextDone = false;
+let currentUtterance = null;
+function finishChunkDisplay() {
+  if (position < text.length) {
+    appendDots();
+    status.textContent = "PAUSA · SEGÜENT";
+    nextButton.disabled = false;
+  } else {
+    // El text ha acabat, però esperem una acció explícita de l'usuari.
+    if (!story.querySelector(".chapter-end-mark")) {
+      const endMark = document.createElement("span");
+      endMark.className = "chapter-end-mark";
+      endMark.textContent = "***";
+      story.appendChild(endMark);
+    }
+    completionPending = true;
+    status.textContent = "TEXT COMPLETAT · CONTINUA";
+    nextButton.disabled = false;
+  }
+}
+function typeCharacter() {
+  if (position >= chunkEnd) {
+    stopTyping();
+    chunkTextDone = true;
+    // La pausa visual només arriba quan també ha acabat la veu d'aquest fragment.
+    if (!readAloudActive || !currentUtterance || !window.speechSynthesis?.speaking) finishChunkDisplay();
+    return;
+  }
+  const node = document.createTextNode(text[position]);
+  story.appendChild(node);
+  position++;
+
+  // Seguretat final: comprovem l'alçada real després de cada caràcter.
+  // Si el navegador o la mida de pantalla fan que el fragment no hi càpiga,
+  // retirem l'últim caràcter i continuem al fragment següent, sense perdre text.
+  if (story.scrollHeight > story.clientHeight + 1) {
+    node.remove();
+    position--;
+    chunkEnd = position;
+    stopTyping();
+    appendDots();
+    status.textContent = "PAUSA · SEGÜENT";
+    nextButton.disabled = false;
+    updateProgress();
+    updateScene();
+    return;
+  }
+
+  appendCursor();
+  updateProgress();
+  updateScene();
+}
+function startChunk(preserveStory = false) {
+  if (playing || position >= text.length) return;
+  if (chunkHistory[chunkHistory.length - 1] !== position) chunkHistory.push(position);
+  previousButton.disabled = chunkHistory.length < 2;
+  if (!preserveStory) removeMarker();
+  else story.querySelector(".pause-dots")?.remove();
+  findChunkEnd(preserveStory);
+  playing = true;
+  started = true;
+  if (readingStartedAt === null) readingStartedAt = Date.now();
+  startButton.disabled = true;
+  nextButton.disabled = true;
+  status.textContent = "ESCRIVINT";
+  appendCursor();
+  chunkTextDone = false;
+  if (readAloudActive) speakCurrentChunk();
+  timer = setInterval(typeCharacter, 25);
+}
+function stopTyping() {
+  if (timer) clearInterval(timer);
+  timer = null; playing = false;
+  story.querySelector(".cursor")?.remove();
+}
+function getChapterRatings() {
+  try { return JSON.parse(localStorage.getItem("elles_chapter_ratings") || "{}"); }
+  catch (e) { return {}; }
+}
+function renderChapterRating() {
+  const saved = getChapterRatings();
+  const value = Number(saved[String(currentChapter)]) || 0;
+  document.querySelectorAll("#rating-stars .rating-star").forEach(button => {
+    const rating = Number(button.dataset.rating);
+    button.classList.toggle("selected", rating <= value);
+    button.setAttribute("aria-pressed", String(rating === value));
+  });
+  document.getElementById("rating-feedback").textContent = value
+    ? `Has valorat aquest capítol amb ${value} de 5 estrelles`
+    : "Tria de 1 a 5 estrelles";
+}
+document.getElementById("rating-stars").addEventListener("click", event => {
+  const button = event.target.closest(".rating-star");
+  if (!button) return;
+  const value = Number(button.dataset.rating);
+  const saved = getChapterRatings();
+  saved[String(currentChapter)] = value;
+  try { localStorage.setItem("elles_chapter_ratings", JSON.stringify(saved)); } catch (e) {}
+  renderChapterRating();
+  renderChapterListRatings();
+});
+
+function showCompletionModal() {
+  if (!completionPending) return;
+  completionPending = false;
+  nextButton.disabled = true;
+  const completedStatus = document.getElementById(`chapter-${["","one","two","three","four","five","six"][currentChapter]}-status`);
+  if (currentChapter === 1) chapterOneCompleted = true;
+  const readChapters = new Set(getReadChapters()); readChapters.add(Number(currentChapter));
+  try { localStorage.setItem("elles_read_chapters", JSON.stringify([...readChapters])); } catch(e) {}
+  updateReadingStats();
+  if (completedStatus) { completedStatus.textContent = "✓ Finalitzat"; completedStatus.closest(".chapter-choice")?.classList.add("completed"); }
+  renderChapterRating();
+  completeModal.hidden = false;
+}
+function nextChunk() {
+  if (!started || playing) return;
+  if (completionPending) {
+    showCompletionModal();
+    return;
+  }
+  if (position >= text.length) return;
+  story.textContent = "";
+  startChunk();
+}
+function previousChunk() {
+  if (playing || chunkHistory.length < 2) return;
+  stopTyping();
+  chunkHistory.pop();
+  position = chunkHistory[chunkHistory.length - 1];
+  chunkEnd = position;
+  story.textContent = "";
+  completeModal.hidden = true;
+  nextButton.disabled = true;
+  startButton.disabled = false;
+  previousButton.disabled = chunkHistory.length < 2;
+  updateProgress();
+  updateScene();
+  startChunk();
+}
+startButton.addEventListener("click", startChunk);
+nextButton.addEventListener("click", nextChunk);
+previousButton.addEventListener("click", previousChunk);
+story.addEventListener("click", () => {
+  // Durant l'efecte màquina d'escriure, un toc revela només
+  // la resta del fragment actual, sense saltar-se la resta del capítol.
+  if (playing) {
+    stopTyping();
+    stopReadAloud();
+    story.querySelector(".cursor")?.remove();
+    story.querySelector(".pause-dots")?.remove();
+    story.append(document.createTextNode(text.slice(position, chunkEnd)));
+    position = chunkEnd;
+    updateProgress();
+    updateReadingStats();
+    finishChunkDisplay();
+    return;
+  }
+  if (completionPending) {
+    showCompletionModal();
+    return;
+  }
+  if (story.querySelector(".pause-dots")) nextChunk();
+});
+document.getElementById("now-button").addEventListener("click", () => {
+  stopReadAloud();
+  completeModal.hidden = true;
+  updateReadingStats();
+  chapterIndex.hidden = false;
+});
+document.getElementById("home-button").addEventListener("click", () => {
+  if (playing) stopTyping();
+  stopReadAloud();
+  completeModal.hidden = true;
+  updateReadingStats();
+  chapterIndex.hidden = false;
+});
+document.getElementById("tomorrow-button").addEventListener("click", () => {
+  completeModal.hidden = true;
+  tomorrowScreen.hidden = false;
+});
+const indexBackButton = document.getElementById("index-back");
+if (indexBackButton) indexBackButton.addEventListener("click", () => {
+  chapterIndex.hidden = true;
+});
+function loadChapter(number) {
+  stopTyping();
+  stopReadAloud();
+  currentChapter = number;
+  text = chapterTexts[number] || "";
+  totalWordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  position = 0; chunkEnd = 0; started = false; playing = false;
+  completionPending = false;
+  chunkHistory.length = 0; chunkHistory.push(0);
+  story.classList.remove("show-all-text");
+  story.textContent = "";
+  completeModal.hidden = true; chapterIndex.hidden = true;
+  startButton.disabled = false; nextButton.disabled = true; previousButton.disabled = true;
+  status.textContent = "PREPARAT";
+  document.getElementById("main-chapter-label").textContent = number === 8 ? "ESPECIAL" : `CAPÍTOL ${["","I","II","III","IV","V","VI","VII"][number]}`;
+  document.getElementById("main-chapter-title").textContent = chapterTitles[number] || "";
+  document.getElementById("main-chapter-subtitle").textContent = number === 1 ? "(Puto hippy)" : "";
+  updateProgress(); updateScene(); updateReadingStats();
+  // En seleccionar un capítol, començar a mostrar el text immediatament.
+  startChunk();
+}
+document.getElementById("chapter-one").addEventListener("click", () => loadChapter(1));
+document.getElementById("chapter-two").addEventListener("click", () => loadChapter(2));
+document.getElementById("chapter-three").addEventListener("click", () => loadChapter(3));
+
+// Lectura en veu alta sincronitzada amb els fragments visibles.
+const voiceButton = document.getElementById("voice-button");
+let readAloudActive = false;
+function stopReadAloud() {
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  currentUtterance = null;
+  readAloudActive = false;
+  voiceButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.2 3.2c-4.4 0-7.8 3.4-7.8 7.7 0 2.1.8 3.8 2.1 5.1.8.8 1.2 1.8 1.2 2.8v.5c0 1 .8 1.8 1.8 1.8h1.1c1.1 0 1.9-.9 1.9-1.9v-2.1c0-1.1.5-2.1 1.4-2.8 1.5-1.2 2.4-3 2.4-5.1 0-3.4-2.7-6-6.1-6Z"/><path d="M10 7.2c-1.8.7-2.8 2.1-2.8 4.1 0 1.1.4 2 1.1 2.7"/><path d="M16.8 5.2c2.1 1.7 3.2 4.1 3.2 6.8"/></svg>';
+  voiceButton.setAttribute("aria-pressed", "false");
+  if (chunkTextDone) finishChunkDisplay();
+}
+function getCatalanFemaleVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  // Prioritzem una veu identificada com a femenina i en català.
+  const catalan = voices.filter(v => /^ca(?:-|_)/i.test(v.lang || ""));
+  const femaleName = /(female|femen|dona|woman|maria|montserrat|helena|laura|anna|alba|emma|nuria|núria|clara|joana|gemma|marta|elvira|julia|júlia|aina|mariona|carme|meritxell|sara)/i;
+  return catalan.find(v => femaleName.test(v.name)) || null;
+}
+function speakCurrentChunk() {
+  if (!readAloudActive || !window.speechSynthesis || position >= chunkEnd) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text.slice(position, chunkEnd));
+  const voice = getCatalanFemaleVoice();
+  if (!voice) {
+    stopReadAloud();
+    alert("Aquest dispositiu no té cap veu femenina en català disponible. Instal·la una veu femenina en català a la configuració de veu del dispositiu i torna-ho a provar.");
+    return;
+  }
+  currentUtterance = utterance;
+  utterance.voice = voice;
+  utterance.lang = voice.lang || "ca-ES";
+  utterance.rate = 0.94;
+  utterance.pitch = 1.08;
+  utterance.onend = () => {
+    if (currentUtterance !== utterance) return;
+    currentUtterance = null;
+    if (chunkTextDone) finishChunkDisplay();
+  };
+  utterance.onerror = () => {
+    if (currentUtterance === utterance) currentUtterance = null;
+    if (chunkTextDone) finishChunkDisplay();
+  };
+  window.speechSynthesis.speak(utterance);
+}
+voiceButton.addEventListener("click", () => {
+  if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+    alert("Aquest navegador no ofereix lectura en veu alta.");
+    return;
+  }
+  if (readAloudActive) { stopReadAloud(); return; }
+  const voice = getCatalanFemaleVoice();
+  if (!voice) {
+    alert("Aquest dispositiu no té cap veu femenina en català disponible. Instal·la una veu femenina en català a la configuració de veu del dispositiu i torna-ho a provar.");
+    return;
+  }
+  readAloudActive = true;
+  voiceButton.innerHTML = "Ⅱ";
+  voiceButton.setAttribute("aria-pressed", "true");
+  if (!started) startChunk();
+  else if (!playing && position < text.length) startChunk();
+  else if (playing) speakCurrentChunk();
+});
+
+const paymentPage = document.getElementById("payment-page");
+let selectedPlan = "episode";
+let selectedPaymentMethod = "PayPal";
+function updatePremiumEpisodeTotal() {
+  const count = document.querySelectorAll("#chapter-index .christmas-special:not(.coming-soon)").length;
+  const label = count === 1 ? "episodi" : "episodis";
+  document.getElementById("premium-episode-total").textContent = `${count} ${label}`;
+}
+updatePremiumEpisodeTotal();
+function openSpecialPayment() {
+  updatePremiumEpisodeTotal();
+  selectedPlan = "pack1";
+  document.querySelectorAll(".price-option").forEach(b => { const on=b.dataset.plan===selectedPlan; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
+  chapterIndex.hidden = true;
+  paymentPage.hidden = false;
+  updatePayButton();
+}
+function updatePayButton() {
+  const planPrices = { pack1: "0,99 €", pack5: "3 €", pack15: "9,99 €" };
+  document.getElementById("pay-button").textContent = `Pagar ${planPrices[selectedPlan]} amb ${selectedPaymentMethod}`;
+}
+document.querySelectorAll(".price-option").forEach(button => button.addEventListener("click", () => {
+  selectedPlan = button.dataset.plan;
+  document.querySelectorAll(".price-option").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
+  updatePayButton();
+}));
+document.querySelectorAll(".payment-method").forEach(button => button.addEventListener("click", () => {
+  selectedPaymentMethod = button.dataset.method;
+  document.querySelectorAll(".payment-method").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
+  updatePayButton();
+}));
+document.getElementById("payment-back").addEventListener("click", () => { paymentPage.hidden=true; chapterIndex.hidden=false; });
+document.getElementById("pay-button").addEventListener("click", () => {
+  const plans = { pack1: "1 episodi especial (0,99 €)", pack5: "5 episodis especials (3 €)", pack15: "15 episodis especials (9,99 €)" };
+  alert(`Has seleccionat el paquet de ${plans[selectedPlan]} i el pagament amb ${selectedPaymentMethod}. La passarel·la encara no està connectada: no s'ha fet cap cobrament.`);
+});
+document.getElementById("chapter-special").addEventListener("click", openSpecialPayment);
+document.getElementById("premium-stats-button").addEventListener("click", openSpecialPayment);
+document.getElementById("wake-book").addEventListener("click", () => {
+  tomorrowScreen.hidden = true;
+  reset();
+});
+updateProgress();
+updateChapterCount();
+updateScene();
+</script>
 </body>
 </html>

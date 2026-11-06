@@ -4,7 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111315">
-<title>ELLES: Confessions d'un borratxo</title>
+<meta name="description" content="ELLES és una novel·la interactiva en català: una confessió personal sobre relacions, desig, alcohol i contradiccions, explicada en capítols digitals.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="book">
+<meta property="og:locale" content="ca_ES">
+<meta property="og:site_name" content="ELLES">
+<meta property="og:title" content="ELLES: Confessions d'un borratxo | Novel·la interactiva">
+<meta property="og:description" content="Una novel·la interactiva en català sobre relacions, desig, alcohol i contradiccions. Llegeix ELLES, capítol a capítol.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ELLES: Confessions d'un borratxo | Novel·la interactiva">
+<meta name="twitter:description" content="Una novel·la interactiva en català sobre relacions, desig, alcohol i contradiccions.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": "ELLES: Confessions d'un borratxo",
+  "inLanguage": "ca",
+  "genre": ["Novel·la interactiva", "Narrativa digital"],
+  "description": "Una novel·la interactiva en català: una confessió personal sobre relacions, desig, alcohol i contradiccions, explicada en capítols digitals."
+}
+</script>
+<title>ELLES: Confessions d'un borratxo | Novel·la interactiva</title>
 <style>
 :root { --bg:#111315; --paper:#e8e1d5; --rose:#c76c79; --muted:#92918c; }
 * { box-sizing:border-box; }
@@ -208,6 +228,7 @@ button.chapter-choice { cursor:pointer; }
 .chapter-choice.locked { opacity:.42; cursor:not-allowed; }
 .chapter-choice .chapter-time { color:#a8aaa5; font:11px monospace; white-space:nowrap; }
 .chapter-rating-summary { color:#e2b64f; font:11px monospace; white-space:nowrap; letter-spacing:1px; }
+.chapter-pending-label { margin-left:auto; color:#d9b8bd; font:10px monospace; letter-spacing:.3px; white-space:nowrap; }
 .chapter-arrow { margin-left:auto; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; flex:0 0 30px; border-radius:50%; color:#fff !important; font: bold 20px/1 Arial,sans-serif; background:linear-gradient(145deg,#d97885,#963847); border:1px solid #f0aab2; box-shadow:0 3px 10px #d9788540,inset 0 1px 2px #ffffff55; transition:transform .2s ease,box-shadow .2s ease,filter .2s ease; }
 .chapter-choice.available:hover .chapter-arrow, .chapter-choice:focus-visible .chapter-arrow { transform:translateX(3px) scale(1.08); filter:brightness(1.15); box-shadow:0 4px 14px #d9788570,inset 0 1px 2px #ffffff66; }
 .chapter-choice.completed .chapter-arrow { background:linear-gradient(145deg,#54d987,#197a48); border-color:#8af0ae; }
@@ -348,7 +369,30 @@ button.chapter-choice { cursor:pointer; }
 
 
 
+/* Menú inferior: tres botons més presents, però discrets i equilibrats. */
+.controls { display:flex; justify-content:center; align-items:center; gap:18px; margin-top:12px; }
+#start { display:none !important; }
+#previous, #next, #animations-button {
+  flex:0 0 60px; width:60px; min-width:60px; height:44px; min-height:44px;
+  padding:0; display:grid; place-items:center; box-sizing:border-box;
+  border:1px solid rgba(210,190,190,.32); border-radius:13px;
+  background:rgba(255,255,255,.018); color:rgba(245,235,230,.9); box-shadow:none;
+  transition:color .18s ease,border-color .18s ease,background .18s ease,transform .18s ease;
+}
+#previous svg, #next svg { display:block; width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; }
+#animations-button { width:64px; min-width:64px; flex-basis:64px; height:46px; min-height:46px; border-color:rgba(215,138,145,.48); color:var(--rose); }
+#animations-button svg { display:block; width:34px; height:34px; fill:none; stroke:currentColor; stroke-width:1.45; stroke-linecap:round; stroke-linejoin:round; }
+#previous:hover, #next:hover, #animations-button:hover,
+#previous:focus-visible, #next:focus-visible, #animations-button:focus-visible {
+  color:var(--rose); border-color:rgba(215,138,145,.85);
+  background:rgba(168,50,66,.09); outline:none;
+}
+#previous:active, #next:active, #animations-button:active { transform:scale(.95); }
+#previous:disabled, #next:disabled { opacity:.28; }
+@media(max-width:480px) { .controls { gap:14px; } #previous,#next { width:56px;min-width:56px;flex-basis:56px;height:42px;min-height:42px; } #animations-button { width:60px;min-width:60px;flex-basis:60px;height:44px;min-height:44px; } }
+
 </style>
+
 </head>
 <body>
 <header>
@@ -378,18 +422,16 @@ button.chapter-choice { cursor:pointer; }
       <div class="progress-track"><div id="progress" class="progress-fill"></div></div>
     </div>
     <div class="controls">
-      <button type="button" id="previous" aria-label="Enrere" title="Enrere" disabled>←</button>
-      <button type="button" id="start" aria-label="Obrir el llibre i escriure" title="Escriure">
-        <svg class="write-icon" viewBox="0 0 64 48" aria-hidden="true">
-          <path d="M5 10c9-4 18-3 27 3v29c-9-6-18-7-27-3V10Z"/>
-          <path d="M59 10c-9-4-18-3-27 3v29c9-6 18-7 27-3V10Z"/>
-          <path d="M32 13v29"/>
-          <path d="M43 5 55 1l-4 13-18 20-5-5L43 5Z"/>
-          <path d="m28 29-2 9 9-4"/>
-          <path d="m43 5 8 9"/>
-        </svg>
+      <button type="button" id="previous" class="nav-arrow" aria-label="Capítol o fragment anterior" title="Anterior" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5 7.5 12l7 7"/></svg>
       </button>
-      <button type="button" id="next" aria-label="Endavant" title="Endavant" disabled>→</button>
+      <button type="button" id="start" class="visually-hidden" aria-hidden="true" tabindex="-1" hidden></button>
+      <button type="button" id="animations-button" class="nav-arrow cinema-button" aria-label="Obrir animacions" title="Animacions">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="16" r="12.2"/><circle cx="16" cy="16" r="3.1"/><circle cx="16" cy="8.5" r="2.2"/><circle cx="22.8" cy="12.2" r="2.2"/><circle cx="20.2" cy="21.9" r="2.2"/><circle cx="11.8" cy="21.9" r="2.2"/><circle cx="9.2" cy="12.2" r="2.2"/><path d="M25.2 25.1c2.1 2.3 4.1 3.7 7.2 3.7 2.6 0 4.2-1.3 4.2-3.1 0-1.7-1.4-2.5-3.8-2.5h-3.1c-2.1 0-3.1-1.1-3.1-2.7 0-1.8 1.7-3.2 4.3-3.2h2.7"/><path d="M26.4 29.2h10.2M29.4 32.2h7.2"/></svg>
+      </button>
+      <button type="button" id="next" class="nav-arrow" aria-label="Capítol o fragment següent" title="Següent" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7"/></svg>
+      </button>
     </div>
     <div class="hint">#antiporn <span aria-hidden="true">🄯</span> Escrits lliure de drets. Comparteix</div>
   </section>
@@ -397,6 +439,15 @@ button.chapter-choice { cursor:pointer; }
 
 
 
+
+<div id="animations-modal" class="overlay" hidden aria-modal="true" role="dialog" aria-labelledby="animations-title">
+  <div class="modal-card animations-card">
+    <button type="button" id="close-animations" class="modal-close" aria-label="Tancar animacions" title="Tancar">×</button>
+    <h2 id="animations-title">Animacions</h2>
+    <p class="animations-caption">Petites escenes en moviment del llibre.</p>
+    <figure class="animation-view"><img src="animació/capitol-I-animacio.gif" alt="Animació del capítol I" loading="lazy"></figure>
+  </div>
+</div>
 
 <div id="complete-modal" class="overlay" hidden>
   <div class="modal-card">
@@ -456,10 +507,10 @@ button.chapter-choice { cursor:pointer; }
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-rossa" disabled aria-disabled="true"><span class="chapter-name">Especial: 💃🏻 Maribel, rossa i gitana</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-veina" disabled aria-disabled="true"><span class="chapter-name">Especial: 🏢 Maribel veïna</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
     </div>
-    <button type="button" class="chapter-choice in-progress" id="chapter-one"><span class="chapter-name">Capítol I: Compartir és hippy</span><span class="chapter-meta"><span class="chapter-time" id="time-one">◷ —</span><span id="chapter-one-status">● En curs · reprendre</span></span></button>
+    <button type="button" class="chapter-choice available" id="chapter-one"><span class="chapter-name">Capítol I: Compartir és hippy</span><span class="chapter-meta"><span class="chapter-time" id="time-one">◷ —</span><span class="chapter-arrow" id="chapter-one-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-two"><span class="chapter-name">Capítol II: Sandra i Marc</span><span class="chapter-meta"><span class="chapter-time" id="time-two">◷ —</span><span class="chapter-arrow" id="chapter-two-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-three"><span class="chapter-name">Capítol III: Laia la del poble</span><span class="chapter-meta"><span class="chapter-time" id="time-three">◷ —</span><span class="chapter-arrow" id="chapter-three-status" aria-hidden="true">›</span></span></button>
-    <button type="button" class="chapter-choice locked" id="chapter-seven" disabled aria-disabled="true"><span class="chapter-name">Capítol VII: Les bessones (Clickbait)</span></button>
+    <button type="button" class="chapter-choice locked" id="chapter-seven" disabled aria-disabled="true"><span class="chapter-name">Capítol VII: Les bessones (Clickbait)</span><span class="chapter-meta"><span class="chapter-time" id="time-seven-chapter">◷ —</span><span class="chapter-arrow" id="chapter-seven-status" aria-hidden="true">›</span></span></button>
 
     <button type="button" class="back-button" id="admin-open">⚙ Administració</button>
     <div class="admin-logo-wrap" aria-label="Logo informatiu"><img src="assets/anti-porno-logo.jpg" alt="Logo anti porno" width="15" height="15" style="width:15px;height:15px;object-fit:contain;display:block;margin:8px auto 0"></div>
@@ -695,7 +746,7 @@ function estimateReadingTime(value) {
 }
 function renderChapterListRatings() {
   const saved = getChapterRatings();
-  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",8:"chapter-special"};
+  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",7:"chapter-seven",8:"chapter-special"};
   for (const [number, id] of Object.entries(ids)) {
     const button = document.getElementById(id);
     const meta = button?.querySelector(".chapter-meta");
@@ -714,23 +765,56 @@ function renderChapterListRatings() {
     summary.title = `Valoració: ${value} de 5 estrelles`;
   }
 }
+function updateChapterRowState(number, button) {
+  if (!button) return;
+  const status = button.querySelector(`#chapter-${["","one","two","three","four","five","six","seven"][number]}-status`);
+  if (!status) return;
+  const completed = new Set(getReadChapters()).has(number);
+  const words = getWordsReadByChapter();
+  const inProgress = !completed && (Number(words[String(number)]) || 0) > 0;
+  button.classList.toggle("completed", completed);
+  button.classList.toggle("in-progress", inProgress);
+  button.classList.toggle("available", !completed && !inProgress && !button.disabled);
+  status.classList.add("chapter-arrow");
+  status.removeAttribute("aria-hidden");
+  if (completed) {
+    status.textContent = "✓";
+    status.setAttribute("aria-label", "Capítol finalitzat");
+    status.title = "Finalitzat";
+  } else if (inProgress) {
+    status.textContent = "●";
+    status.setAttribute("aria-label", "Lectura en curs; reprendre capítol");
+    status.title = "En curs · reprendre";
+  } else {
+    status.textContent = "Pendent de llegir";
+    status.classList.remove("chapter-arrow");
+    status.classList.add("chapter-pending-label");
+    status.setAttribute("aria-label", "Pendent de llegir");
+    status.title = "Pendent de llegir";
+  }
+  if (completed || inProgress) {
+    status.classList.remove("chapter-pending-label");
+    status.classList.add("chapter-arrow");
+  }
+}
 function refreshChapterMenu() {
-  for (let n=2;n<=6;n++) {
-    const suffix=["","","two","three","four","five","six"][n];
+  for (let n=4;n<=6;n++) {
+    const suffix=["","","","","four","five","six"][n];
     let button=document.getElementById(`chapter-${suffix}`);
-    if (!button && n>3) {
+    if (!button) {
       const names={4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1"};
       button=document.createElement("button"); button.type="button"; button.id=`chapter-${suffix}`;
       button.className="chapter-choice locked";
       button.innerHTML=`<span class="chapter-name">Capítol ${["","","","","IV","V","VI"][n]}: ${names[n]}</span><span class="chapter-meta"><span class="chapter-time" id="time-${suffix}">◷ —</span><span class="chapter-arrow" id="chapter-${suffix}-status" aria-hidden="true">›</span></span>`;
-      button.addEventListener("click",()=>loadChapter(n));
-      const chapterSeven=document.getElementById("chapter-seven"); const indexBack=document.getElementById("admin-open"); chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven || indexBack);
+      const chapterSeven=document.getElementById("chapter-seven");
+      chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven);
     }
-    if (button && chapterTexts[n]) {
-      button.className="chapter-choice available";
-      const status=button.querySelector(`#chapter-${suffix}-status`);
-      // No substituir chapter-meta: conté el temps estimat de lectura.
-      if(status) status.textContent="›"; status.classList.add("chapter-arrow");
+    const hasText = typeof chapterTexts[n] === "string" && chapterTexts[n].trim().length > 0;
+    button.disabled = !hasText;
+    button.setAttribute("aria-disabled", String(!hasText));
+    if (hasText && !button.dataset.openHandler) {
+      button.addEventListener("click",()=>loadChapter(n));
+      button.dataset.openHandler="true";
     }
   }
   const chapterSevenButton=document.getElementById("chapter-seven");
@@ -744,13 +828,17 @@ function refreshChapterMenu() {
       chapterSevenButton.dataset.openHandler="true";
     }
   }
-  for (const n of [1,2,3,4,5,6,8]) {
+  for (const n of [1,2,3,4,5,6,7,8]) {
     const suffix=["","one","two","three","four","five","six","seven","seven"][n];
-    const time=document.getElementById(`time-${suffix}`);
+    const id = n===8 ? "chapter-special" : `chapter-${suffix}`;
+    const button=document.getElementById(id);
+    const time=document.getElementById(n===7 ? "time-seven-chapter" : `time-${suffix}`);
     if(time) time.textContent=estimateReadingTime(chapterTexts[n] || "");
+    if (n <= 7) updateChapterRowState(n, button);
   }
   renderChapterListRatings();
 }
+
 try {
   const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}");
   // Migra el text especial antic del número 7 a la clau interna 8.
@@ -829,6 +917,15 @@ function updateCumulativeWordsRead() {
   try { localStorage.setItem("elles_words_read_by_chapter", JSON.stringify(saved)); } catch (e) {}
   return Object.values(saved).reduce((sum, value) => sum + Math.max(0, Number(value) || 0), 0);
 }
+// Reinici únic de l'estat de lectura: tots els capítols tornen a quedar pendents.
+try {
+  if (localStorage.getItem("elles_all_chapters_pending_v1") !== "1") {
+    localStorage.setItem("elles_read_chapters", "[]");
+    localStorage.setItem("elles_words_read_by_chapter", "{}");
+    localStorage.setItem("elles_all_chapters_pending_v1", "1");
+  }
+} catch (e) {}
+
 function getReadChapters() {
   try { const value = JSON.parse(localStorage.getItem("elles_read_chapters") || "[]"); return Array.isArray(value) ? value.map(Number) : []; } catch(e) { return []; }
 }
@@ -852,9 +949,13 @@ function updateReadingStats() {
     : `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
   const wordsRead = updateCumulativeWordsRead();
   const percent = Math.floor((position / text.length) * 100);
-  document.getElementById("reading-time").textContent = timeText;
-  document.getElementById("reading-total-words").textContent = wordsRead.toLocaleString("ca-ES");
+  const readingTime = document.getElementById("reading-time");
+  const readingTotalWords = document.getElementById("reading-total-words");
+  if (readingTime) readingTime.textContent = timeText;
+  if (readingTotalWords) readingTotalWords.textContent = wordsRead.toLocaleString("ca-ES");
   updateChapterCount();
+  const rowSuffix = ["","one","two","three","four","five","six","seven"][currentChapter];
+  if (rowSuffix) updateChapterRowState(currentChapter, document.getElementById(`chapter-${rowSuffix}`));
 }
 function updateProgress() {
   const left = Math.ceil(((text.length - position) / text.length) * 100);
@@ -1019,12 +1120,13 @@ function showCompletionModal() {
   if (!completionPending) return;
   completionPending = false;
   nextButton.disabled = true;
-  const completedStatus = document.getElementById(`chapter-${["","one","two","three","four","five","six"][currentChapter]}-status`);
+  const completedSuffix = ["","one","two","three","four","five","six","seven"][currentChapter];
+  const completedStatus = completedSuffix ? document.getElementById(`chapter-${completedSuffix}-status`) : null;
   if (currentChapter === 1) chapterOneCompleted = true;
   const readChapters = new Set(getReadChapters()); readChapters.add(Number(currentChapter));
   try { localStorage.setItem("elles_read_chapters", JSON.stringify([...readChapters])); } catch(e) {}
   updateReadingStats();
-  if (completedStatus) { completedStatus.textContent = "✓ Finalitzat"; completedStatus.closest(".chapter-choice")?.classList.add("completed"); }
+  refreshChapterMenu();
   renderChapterRating();
   completeModal.hidden = false;
 }
@@ -1083,12 +1185,14 @@ document.getElementById("now-button").addEventListener("click", () => {
   updateReadingStats();
   chapterIndex.hidden = false;
 });
-document.getElementById("home-button").addEventListener("click", () => {
+const homeButton = document.getElementById("home-button");
+if (homeButton) homeButton.addEventListener("click", () => {
   if (playing) stopTyping();
   stopReadAloud();
   completeModal.hidden = true;
-  updateReadingStats();
+  paymentPage.hidden = true;
   chapterIndex.hidden = false;
+  try { updateReadingStats(); } catch (error) { console.warn("No s'han pogut actualitzar les estadístiques:", error); }
 });
 document.getElementById("tomorrow-button").addEventListener("click", () => {
   completeModal.hidden = true;
@@ -1114,14 +1218,17 @@ function loadChapter(number) {
   status.textContent = "PREPARAT";
   document.getElementById("main-chapter-label").textContent = number === 8 ? "ESPECIAL" : `CAPÍTOL ${["","I","II","III","IV","V","VI","VII"][number]}`;
   document.getElementById("main-chapter-title").textContent = chapterTitles[number] || "";
-  document.getElementById("main-chapter-subtitle").textContent = number === 1 ? "(Puto hippy)" : "";
+  document.getElementById("main-chapter-subtitle").textContent = "";
   updateProgress(); updateScene(); updateReadingStats();
-  // En seleccionar un capítol, començar a mostrar el text immediatament.
   startChunk();
 }
-document.getElementById("chapter-one").addEventListener("click", () => loadChapter(1));
-document.getElementById("chapter-two").addEventListener("click", () => loadChapter(2));
-document.getElementById("chapter-three").addEventListener("click", () => loadChapter(3));
+for (const number of [1,2,3]) {
+  const button = document.getElementById(`chapter-${["","one","two","three"][number]}`);
+  if (button && !button.dataset.openHandler) {
+    button.addEventListener("click", () => loadChapter(number));
+    button.dataset.openHandler = "true";
+  }
+}
 
 // Lectura en veu alta sincronitzada amb els fragments visibles.
 const voiceButton = document.getElementById("voice-button");

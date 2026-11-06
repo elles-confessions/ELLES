@@ -16,3 +16,4 @@ Paquet preparat per publicar amb GitHub Pages.
 - `assets/css/styles.css`: full d'estils conservat al projecte.
 
 Nota: la versió actual d'`index.html` conté els seus estils i scripts incorporats directament; els fitxers `assets/js/app.js` i `assets/css/styles.css` es conserven a l'estructura del projecte, però no s'importen automàticament per aquesta pàgina.
+\n\n## Actualització 2026-11-06\n- Integrada l’animació GIF `animació/capitol-I-animacio.gif` al final del text del Capítol I, dins la caixa de lectura.\n- Mantinguts els capítols, estils i funcionalitats originals.\n

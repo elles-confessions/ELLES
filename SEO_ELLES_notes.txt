@@ -1,0 +1,22 @@
+ELLES — SEO actualitzada
+========================
+
+Versió base: ELLES_home_funciona.zip
+
+Canvis aplicats a index.html:
+- Títol SEO ampliat.
+- Meta description en català.
+- Robots index/follow.
+- Metadades Open Graph.
+- Metadades Twitter Card.
+- Dades estructurades Schema.org (Book).
+
+No s'ha modificat el disseny, els capítols, els scripts ni les imatges.
+No s'ha publicat automàticament a GitHub Pages.
+
+Per completar el SEO tècnic caldrà conèixer l'URL pública definitiva del lloc:
+- canonical
+- og:url
+- sitemap.xml
+- robots.txt
+- imatge absoluta per a les previsualitzacions socials

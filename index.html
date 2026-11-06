@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111315">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ELLES">
+<link rel="apple-touch-icon" href="elles-icon-192.png">
 <meta name="description" content="ELLES és una novel·la interactiva en català: una confessió personal sobre relacions, desig, alcohol i contradiccions, explicada en capítols digitals.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="og:type" content="book">
@@ -175,6 +180,7 @@ body.light-reading .hint { color:#777; }
 .index-quick-button { width:40px; height:40px; min-width:40px; min-height:40px; padding:7px; display:flex; align-items:center; justify-content:center; border:1px solid #59434a; border-radius:10px; background:#202326; color:#f0a0b0; box-shadow:0 0 12px #d78a9120; }
 .index-quick-button svg { width:23px; height:23px; display:block; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .index-quick-button.instagram svg { fill:none; stroke-width:1.9; }
+#shortcut-open { border:1px solid red; }
 .index-quick-button:active { transform:scale(.96); }
 .shortcut-card { width:min(440px,100%); padding:24px 20px; border:1px solid #59434a; border-radius:13px; background:#191c1f; box-shadow:0 20px 70px #000b; color:var(--paper); }
 .shortcut-card h2 { color:var(--rose); font:16px monospace; letter-spacing:1px; margin:0 0 16px; }
@@ -479,7 +485,7 @@ button.chapter-choice { cursor:pointer; }
       <div class="index-label-row">
         <span class="index-label">[ CAPÍTOLS ]</span>
         <div class="index-quick-actions" aria-label="Accés ràpid">
-          <button type="button" class="index-quick-button" id="shortcut-open" aria-label="Guardar ELLES a la pantalla d'inici" title="Guardar a la pantalla d'inici">
+          <button type="button" class="index-quick-button" id="shortcut-open" aria-label="Instal·lar ELLES a la pantalla d'inici" title="Instal·lar ELLES">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="1.8" width="14" height="20.4" rx="2.7"/><path d="M12 6v8m-3-3 3 3 3-3M9 18h6"/></svg>
           </button>
           <a class="index-quick-button instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Obrir Instagram" title="Instagram">
@@ -545,8 +551,8 @@ button.chapter-choice { cursor:pointer; }
       <li>Els capítols especials són exclusius dels membres Patreon amb nivell Mecenes, Fan o Groupie actiu.</li>
       <li>L’accés als continguts de pagament depèn de la vigència i verificació de la membresia corresponent.</li>
     </ul></section>
-    <button type="button" class="patreon-pay-button" id="patreon-real-payment" disabled aria-disabled="true">OBRIR PAGAMENT A PATREON</button>
-    <p class="patreon-pay-note" id="patreon-pay-note">Enllaç de pagament pendent: cal afegir l’URL de la pàgina pròpia d’ELLES a Patreon per activar aquest botó.</p>
+    <button type="button" class="patreon-pay-button" id="patreon-real-payment">OBRIR PAGAMENT A PATREON</button>
+    <p class="patreon-pay-note" id="patreon-pay-note">Els pagaments encara no estan disponibles.</p>
     <button type="button" class="patreon-page-close" id="close-patreon-page">TORNAR A LA LLISTA DE CAPÍTOLS</button>
   </section>
 </div>
@@ -627,6 +633,7 @@ const closePatreonPage = document.getElementById("close-patreon-page");
 openPatreonPage.addEventListener("click", () => { chapterIndex.hidden = true; patreonPage.hidden = false; });
 function closePatreonMembershipPage() { patreonPage.hidden = true; chapterIndex.hidden = false; }
 closePatreonPage.addEventListener("click", closePatreonMembershipPage);
+document.querySelectorAll(".patreon-pay-button").forEach(button => { button.addEventListener("click", () => window.alert("No disponible encara")); });
 patreonPage.addEventListener("click", event => { if (event.target === patreonPage) closePatreonMembershipPage(); });
 const specialsToggle = document.getElementById("specials-toggle");
 const specialsList = document.getElementById("specials-list");
@@ -650,9 +657,31 @@ floatingStats.addEventListener("animationend", event => {
   if (event.animationName === "stats-scroll-motion") floatingStats.classList.remove("is-scrolling");
 });
 const shortcutHelp = document.getElementById("shortcut-help");
-document.getElementById("shortcut-open").addEventListener("click", () => { shortcutHelp.hidden = false; });
+let deferredInstallPrompt = null;
+const shortcutButton = document.getElementById("shortcut-open");
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  shortcutButton.title = "Instal·lar ELLES";
+});
+shortcutButton.addEventListener("click", async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    return;
+  }
+  shortcutHelp.hidden = false;
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  shortcutButton.title = "ELLES instal·lat";
+});
 document.getElementById("shortcut-close").addEventListener("click", () => { shortcutHelp.hidden = true; });
 shortcutHelp.addEventListener("click", (event) => { if (event.target === shortcutHelp) shortcutHelp.hidden = true; });
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {}));
+}
 const tomorrowScreen = document.getElementById("tomorrow-screen");
 const themeToggle = document.getElementById("theme-toggle");
 themeToggle.addEventListener("click", () => {
@@ -750,6 +779,8 @@ function refreshChapterMenu() {
     const hasText = typeof chapterTexts[n] === "string" && chapterTexts[n].trim().length > 0;
     button.disabled = !hasText;
     button.setAttribute("aria-disabled", String(!hasText));
+    button.classList.toggle("locked", !hasText);
+    button.classList.toggle("available", hasText);
     if (hasText && !button.dataset.openHandler) {
       button.addEventListener("click",()=>loadChapter(n));
       button.dataset.openHandler="true";

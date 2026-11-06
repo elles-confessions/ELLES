@@ -238,7 +238,7 @@ button.chapter-choice { cursor:pointer; }
 .chapter-choice.christmas-special .chapter-meta { color:#39d878; }
 .back-button { margin-top:16px; width:100%; }
 .reading-stats { margin-top:18px; padding:8px 9px 7px; border:1px solid rgba(170,170,170,.45); background:linear-gradient(145deg,rgba(128,128,128,.55),rgba(92,92,92,.55)); border-radius:10px; text-align:left; box-shadow:0 6px 16px #0003; }
-.floating-reading-stats { position:fixed; z-index:25; left:0; right:0; bottom:24px; transform:none; width:100%; max-width:none; box-sizing:border-box; margin:0; border-radius:0; padding:0 0 env(safe-area-inset-bottom); background:transparent; border:0; box-shadow:none; animation:stats-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+.floating-reading-stats { position:fixed; z-index:25; left:0; right:0; bottom:24px; transform:none; width:100%; max-width:none; box-sizing:border-box; margin:0; border-radius:0; padding:10px 0 calc(10px + env(safe-area-inset-bottom)); background:#08050d url("assets/neon-hearts-reading.jpg") center center / cover no-repeat; border-top:1px solid #e84ba8; border-right:1px solid #000; border-bottom:1px solid #e84ba8; border-left:1px solid #000; box-shadow:0 -4px 24px #ef39a455, 0 4px 24px #ef39a455; animation:stats-rise .65s cubic-bezier(.2,.75,.25,1) both; }
 @keyframes stats-rise { from { opacity:0; transform:translateY(100%); } to { opacity:1; transform:translateY(0); } }
 .floating-reading-stats { will-change:transform; transition:transform .22s ease-out; }
 .floating-reading-stats.is-scrolling { animation:stats-scroll-motion .42s cubic-bezier(.2,.8,.2,1); }
@@ -250,19 +250,19 @@ button.chapter-choice { cursor:pointer; }
 @media (prefers-reduced-motion: reduce) { .floating-reading-stats { animation:none; } }
 #chapter-index .index-card { padding-bottom:145px; }
 .stats-heading { color:var(--rose); font:10px monospace; letter-spacing:2px; margin-bottom:13px; text-align:center; }
-.stats-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; width:100%; }
-.stats-grid div { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:0; min-height:72px; padding:9px 3px calc(10px + env(safe-area-inset-bottom)); border:0; border-radius:0; background:rgba(0,0,0,.75); text-align:center; }
-.stats-grid .premium-stats-button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:0; min-height:72px; padding:9px 3px calc(10px + env(safe-area-inset-bottom)); border:0; border-radius:0; background:rgba(0,0,0,.75); color:inherit; text-align:center; cursor:pointer; font:inherit; }
-.stats-grid .premium-stats-button:active { background:rgba(40,40,40,.95); }
-.stats-grid .premium-stats-button > span:not(.stats-icon) { color:var(--muted); font:9px monospace; line-height:1.2; text-transform:uppercase; }
-.stats-grid .premium-stats-button .stats-icon { color:#c9a7ff; filter:drop-shadow(0 0 5px #a66cff99); }
-.stats-grid .premium-stats-button #premium-episode-total { color:#c9a7ff; font:bold 13px Georgia,serif; line-height:1.1; }
-.stats-grid .premium-stats-button .premium-episode-caption { color:var(--muted); font:8px monospace; line-height:1.1; text-transform:none; }
-.stats-grid .premium-stats-button:focus-visible { outline:2px solid #c9a7ff; outline-offset:-2px; }
-.stats-grid .stats-icon { color:var(--rose); width:22px; height:22px; display:flex; align-items:center; justify-content:center; line-height:1; filter:drop-shadow(0 0 4px #d78a9140); flex:0 0 22px; }
-.stats-grid .stats-icon svg { width:22px; height:22px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.stats-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; width:100%; padding:0 12px; box-sizing:border-box; }
+.stats-grid .stats-patreon { align-items:center; justify-content:center; cursor:pointer; font-family:inherit; color:var(--paper); text-decoration:none; -webkit-tap-highlight-color:transparent; }
+.stats-grid .stats-patreon .patreon-mark { color:#ff35b5; }
+.stats-grid .stats-patreon .patreon-mark { width:30px; height:30px; flex:0 0 30px; color:#ff42b9; filter:drop-shadow(0 0 1px #ff35b5) drop-shadow(0 0 3px #ff35b5); }
+.stats-grid .stats-patreon .patreon-mark .patreon-custom-mark { width:30px; height:30px; display:block; fill:currentColor; stroke:none; }
+.stats-grid .stats-patreon span:not(.stats-icon) { color:var(--muted); font:9px monospace; line-height:1.2; text-transform:uppercase; }
+.stats-grid .stats-patreon strong { color:#ff35b5; font:bold 16px Georgia,serif; text-shadow:0 0 5px #ff35b5,0 0 11px #d000ff; }
+.stats-grid .stats-patreon:active { background:rgba(255,53,181,.16); }
+.stats-grid > div, .stats-grid > button { box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:0; min-height:62px; padding:6px 3px calc(7px + env(safe-area-inset-bottom)); border:1px solid rgba(215,138,145,.38); border-radius:11px; background:rgba(5,3,9,.91); text-align:center; box-shadow:0 0 12px #000b; }
+.stats-grid .stats-icon { color:var(--rose); width:18px; height:18px; display:flex; align-items:center; justify-content:center; line-height:1; filter:drop-shadow(0 0 4px #d78a9140); flex:0 0 18px; }
+.stats-grid .stats-icon svg { width:18px; height:18px; display:block; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .stats-grid span:not(.stats-icon) { color:var(--muted); font:9px monospace; line-height:1.2; letter-spacing:.1px; text-transform:uppercase; }
-.stats-grid strong { color:var(--paper); font: bold 16px Georgia,serif; font-variant-numeric:tabular-nums; }
+.stats-grid strong { color:var(--paper); font: bold 14px Georgia,serif; font-variant-numeric:tabular-nums; }
 .stats-track { height:3px; margin-top:6px; background:#393437; border-radius:10px; overflow:hidden; }
 #reading-progress-fill { width:0%; height:100%; background:linear-gradient(90deg,#a83242,#d78a91); transition:width .2s ease; }
 @media(max-width:380px) { .stats-grid span { font-size:8px; } .stats-grid strong { font-size:14px; } #voice-button { font-size:9px; padding:0 6px; } }
@@ -276,16 +276,6 @@ button.chapter-choice { cursor:pointer; }
   min-width:120px; min-height:100px;
 }
 .chapter-preview-card h2 { margin:24px 0 16px; }
-.admin-card { position:relative; width:min(620px,100%); max-height:90dvh; overflow:auto; padding:26px 22px; text-align:left; background:#191c1f; border:1px solid #72505a; border-radius:12px; box-shadow:0 20px 70px #000b; }
-.admin-card h2 { color:var(--rose); font:12px monospace; letter-spacing:3px; margin:0 0 18px; }
-.admin-card label { display:block; color:var(--muted); font:10px monospace; margin:13px 0 6px; }
-.admin-card input,.admin-card select,.admin-card textarea { width:100%; color:var(--paper); background:#101214; border:1px solid #51454a; border-radius:7px; padding:11px; font:13px monospace; }
-.admin-card textarea { min-height:190px; resize:vertical; line-height:1.5; }
-.admin-actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:14px; }
-.admin-note { color:var(--muted); font:10px/1.5 monospace; margin:12px 0; }
-.admin-stats { margin-top:14px; padding:14px; background:#101214; border-radius:8px; color:var(--muted); font:12px/1.6 monospace; }
-.admin-stats strong { color:var(--paper); }
-.admin-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
 
 @media(max-width:500px) {
   .modal-card,.index-card { width:100%; max-width:100%; padding:clamp(14px,4vw,24px) clamp(10px,3.5vw,17px); }
@@ -300,12 +290,11 @@ button.chapter-choice { cursor:pointer; }
 
 
 
-    .mariajo-special { grid-template-columns:minmax(0,1fr) 68px; grid-template-rows:auto; align-items:center; gap:12px; }
+    .mariajo-special { grid-template-columns:minmax(0,1fr); grid-template-rows:auto; align-items:center; gap:12px; }
     .mariajo-special-info { min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:9px; }
     .mariajo-special .chapter-meta { width:100%; justify-content:flex-start; }
     .mariajo-special .special-price { margin-left:0; }
-    .mariajo-special-photo { display:block; width:68px; height:68px; object-fit:cover; object-position:center 28%; border-radius:7px; border:1px solid #c99af0; }
-    @media (max-width:360px) { .mariajo-special { grid-template-columns:minmax(0,1fr) 58px; gap:8px; } .mariajo-special-photo { width:58px; height:58px; } }
+    @media (max-width:360px) { .mariajo-special { grid-template-columns:minmax(0,1fr); gap:8px; } }
     .christmas-special {
       border: 1px solid #a879d6 !important;
       color: #eadcf8 !important;
@@ -343,31 +332,6 @@ button.chapter-choice { cursor:pointer; }
       white-space: nowrap;
     }
 
-/* Passarel·la de pagament dels capítols especials */
-#payment-page { z-index:40; overflow-y:auto; align-items:flex-start; }
-.payment-card { width:min(620px,100%); margin:auto; padding:26px 22px; background:#191c1f; border:1px solid #39d878; border-radius:14px; box-shadow:0 20px 70px #000b; }
-.payment-heading { color:#39d878; font:11px monospace; letter-spacing:3px; text-align:center; margin-bottom:9px; }
-.payment-title { color:var(--paper); font:normal clamp(24px,5vw,32px) Georgia,serif; text-align:center; margin:0 0 8px; }
-.payment-intro { color:var(--muted); font:12px/1.5 monospace; text-align:center; margin:0 0 20px; }
-.price-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-.price-option { min-height:155px; padding:17px 14px; border:1px solid #4a5050; border-radius:11px; background:#202528; text-align:left; display:flex; flex-direction:column; align-items:flex-start; gap:9px; letter-spacing:0; }
-.price-option.selected { border:2px solid #39d878; background:rgba(57,216,120,.10); box-shadow:0 0 18px rgba(57,216,120,.13); }
-.price-option .option-name { color:var(--paper); font:14px/1.35 Georgia,serif; letter-spacing:0; }
-.price-option .option-detail { color:var(--muted); font:10px/1.4 monospace; letter-spacing:0; }
-.price-option .option-price { color:#39d878; font:bold 25px Georgia,serif; margin-top:auto; }
-.payment-subheading { color:var(--muted); font:10px monospace; letter-spacing:2px; margin:22px 0 10px; text-align:center; }
-.payment-methods { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
-.payment-method { min-height:76px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:7px; padding:9px 5px; border:1px solid #4a5050; border-radius:9px; background:#202528; letter-spacing:0; }
-.payment-method.selected { border:2px solid #39d878; background:rgba(57,216,120,.09); }
-.payment-method svg { width:74px; height:28px; }
-.payment-method .method-label { color:#ddd; font:10px monospace; letter-spacing:.5px; }
-#pay-button { width:100%; margin-top:18px; min-height:52px; color:#07150c; background:#39d878; border:1px solid #39d878; font-weight:bold; font-size:12px; }
-#pay-button:hover { background:#59ed91; }
-#payment-back { width:100%; margin-top:9px; }
-.payment-disclaimer { color:#777; font:9px/1.5 monospace; text-align:center; margin:14px 4px 0; }
-@media(max-width:620px) { .price-options { grid-template-columns:1fr; } .price-option { min-height:120px; } .payment-card { padding:22px 16px; } }
-
-
 
 /* Menú inferior: tres botons més presents, però discrets i equilibrats. */
 .controls { display:flex; justify-content:center; align-items:center; gap:18px; margin-top:12px; }
@@ -390,6 +354,29 @@ button.chapter-choice { cursor:pointer; }
 #previous:active, #next:active, #animations-button:active { transform:scale(.95); }
 #previous:disabled, #next:disabled { opacity:.28; }
 @media(max-width:480px) { .controls { gap:14px; } #previous,#next { width:56px;min-width:56px;flex-basis:56px;height:42px;min-height:42px; } #animations-button { width:60px;min-width:60px;flex-basis:60px;height:44px;min-height:44px; } }
+
+
+
+/* Pàgina interna de membresia ELLES */
+.patreon-page-card { width:min(680px,100%); max-height:calc(100dvh - 24px); overflow-y:auto; text-align:left; padding:clamp(18px,4vw,30px); border-color:#8056a8; background:linear-gradient(145deg,#21152b,#17121e); }
+.patreon-page-card h2 { text-align:center; color:#e5c5ff; letter-spacing:1px; }
+.patreon-intro { text-align:center; color:#c7b8d2!important; line-height:1.6!important; }
+.patreon-page-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:18px 0; }
+.patreon-page-tier { padding:13px; border:1px solid #59436c; border-radius:10px; background:#17121f; }
+.patreon-page-tier h3 { margin:0 0 7px; color:#f0dfff; font:700 14px monospace; }
+.patreon-page-tier .price { margin:0 0 8px; color:#fff; font:700 21px monospace; }
+.patreon-page-tier .price small { color:#bca9ca; font-size:11px; font-weight:400; }
+.patreon-page-tier p { margin:0; color:#d1c5d9; font:12px/1.5 monospace; }
+.patreon-page-tier.fan { border-color:#a66bc8; }
+.patreon-page-tier.groupie { border-color:#c69a54; }
+.patreon-rules { margin:16px 0; padding:14px; border:1px solid #59436c; border-radius:10px; background:#17121f; }
+.patreon-rules h3 { margin:0 0 9px; color:#e5c5ff; font:700 13px monospace; }
+.patreon-rules ul { margin:0; padding-left:19px; color:#d1c5d9; font:12px/1.65 monospace; }
+.patreon-pay-button { display:block; width:100%; min-height:48px; margin-top:14px; border:1px solid #a66bc8; border-radius:9px; background:#75429a; color:white; font:700 13px monospace; letter-spacing:.5px; }
+.patreon-pay-button:disabled { opacity:.55; cursor:not-allowed; }
+.patreon-pay-note { margin:8px 0 0!important; text-align:center; font:10px/1.5 monospace!important; color:#aa9bb5!important; }
+.patreon-page-close { display:block; width:100%; margin-top:12px; min-height:42px; border:1px solid #59436c; border-radius:9px; background:transparent; color:#e8ddec; font:12px monospace; }
+@media(max-width:480px){.patreon-page-grid{grid-template-columns:1fr}.patreon-page-card{padding:17px 13px}}
 
 </style>
 
@@ -503,23 +490,22 @@ button.chapter-choice { cursor:pointer; }
     </div>
     <button type="button" class="specials-toggle" id="specials-toggle" aria-expanded="false" aria-controls="specials-list"><span>✦</span> Especials <span class="specials-chevron" aria-hidden="true">⌄</span></button>
     <div id="specials-list" class="specials-list" hidden>
-      <button type="button" class="chapter-choice available christmas-special mariajo-special" id="chapter-special"><span class="mariajo-special-info"><span class="chapter-name">Especial: 🩲 Mariajo pegging</span><span class="chapter-meta"><span class="chapter-time" id="time-seven">◷ —</span><span class="special-price">0,99€</span></span></span><img class="mariajo-special-photo" src="assets/mariajo-foto.jpg" alt="Fotografia de Mariajo" loading="lazy"></button>
+      <button type="button" class="chapter-choice locked christmas-special mariajo-special" id="chapter-special" aria-label="Capítol especial bloquejat: només per a membres de Patreon"><span class="mariajo-special-info"><span class="chapter-name">🔒 Especial: 🩲 Mariajo pegging</span><span class="chapter-meta"><span class="chapter-time" id="time-seven">◷ —</span><span class="coming-soon-label">Només membres Patreon · Veure membresia</span></span></span></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-rossa" disabled aria-disabled="true"><span class="chapter-name">Especial: 💃🏻 Maribel, rossa i gitana</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-veina" disabled aria-disabled="true"><span class="chapter-name">Especial: 🏢 Maribel veïna</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>
     </div>
+
     <button type="button" class="chapter-choice available" id="chapter-one"><span class="chapter-name">Capítol I: Compartir és hippy</span><span class="chapter-meta"><span class="chapter-time" id="time-one">◷ —</span><span class="chapter-arrow" id="chapter-one-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-two"><span class="chapter-name">Capítol II: Sandra i Marc</span><span class="chapter-meta"><span class="chapter-time" id="time-two">◷ —</span><span class="chapter-arrow" id="chapter-two-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice available" id="chapter-three"><span class="chapter-name">Capítol III: Laia la del poble</span><span class="chapter-meta"><span class="chapter-time" id="time-three">◷ —</span><span class="chapter-arrow" id="chapter-three-status" aria-hidden="true">›</span></span></button>
     <button type="button" class="chapter-choice locked" id="chapter-seven" disabled aria-disabled="true"><span class="chapter-name">Capítol VII: Les bessones (Clickbait)</span><span class="chapter-meta"><span class="chapter-time" id="time-seven-chapter">◷ —</span><span class="chapter-arrow" id="chapter-seven-status" aria-hidden="true">›</span></span></button>
 
-    <button type="button" class="back-button" id="admin-open">⚙ Administració</button>
-    <div class="admin-logo-wrap" aria-label="Logo informatiu"><img src="assets/anti-porno-logo.jpg" alt="Logo anti porno" width="15" height="15" style="width:15px;height:15px;object-fit:contain;display:block;margin:8px auto 0"></div>
   </div>
   <div class="reading-stats floating-reading-stats" aria-live="polite">
       <div class="stats-grid">
         <div><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span>Temps llegint</span><strong id="reading-time">00:00</strong></div>
         <div><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5.5c3.5-1.5 6.5-1 9 1.2v13c-2.5-2.2-5.5-2.7-9-1.2z"/><path d="M21 5.5c-3.5-1.5-6.5-1-9 1.2v13c2.5-2.2 5.5-2.7 9-1.2z"/></svg></span><span>Capítols</span><strong id="reading-chapters">0 / 7</strong></div>
-        <button type="button" class="premium-stats-button" id="premium-stats-button" aria-label="Obrir compres Premium"><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.7 6.3L21 11l-6.3 2.7L12 20l-2.7-6.3L3 11l6.3-2.7z"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"/></svg></span><span>Premium</span><strong id="premium-episode-total">1 episodi</strong><small class="premium-episode-caption">per desbloquejar</small></button>
+        <button class="stats-patreon" id="open-patreon-page" type="button" aria-label="Obrir la pàgina de membresia d'ELLES" title="Membresia ELLES"><span class="stats-icon patreon-mark" aria-hidden="true"><svg class="patreon-custom-mark" viewBox="0 0 512 512" role="presentation"><path d="M 406.00,46.27 L 396.44,41.49 L 395.91,40.42 L 374.67,31.40 L 361.40,27.15 L 336.44,21.31 L 306.71,17.06 L 284.94,16.00 L 261.04,16.00 L 230.25,18.12 L 224.41,19.72 L 209.54,21.31 L 207.95,22.37 L 184.05,27.15 L 157.50,36.18 L 135.20,46.27 L 118.74,56.35 L 100.16,71.22 L 87.95,83.96 L 79.45,94.58 L 70.42,107.86 L 60.34,126.97 L 51.31,149.81 L 43.88,176.88 L 38.04,215.12 L 36.97,236.88 L 38.04,305.38 L 41.22,338.83 L 48.12,380.78 L 49.72,383.96 L 53.96,403.61 L 60.34,422.73 L 70.42,445.03 L 80.51,460.96 L 86.35,468.39 L 95.38,477.42 L 102.81,483.26 L 115.56,490.16 L 123.52,492.28 L 124.58,493.35 L 133.61,494.94 L 149.54,495.47 L 164.94,493.35 L 179.27,487.50 L 186.71,482.73 L 200.51,469.98 L 213.26,452.99 L 228.12,425.91 L 253.08,371.22 L 266.88,349.98 L 279.10,336.71 L 296.62,323.43 L 314.14,314.41 L 339.63,305.38 L 348.65,303.79 L 349.72,302.73 L 358.74,301.13 L 379.98,294.76 L 395.91,287.86 L 406.53,282.02 L 417.68,274.58 L 429.36,265.03 L 438.92,255.47 L 450.07,241.66 L 463.35,217.77 L 469.19,201.31 L 470.78,191.75 L 471.84,190.16 L 474.50,166.80 L 474.50,154.58 L 472.37,136.00 L 469.19,123.79 L 463.35,108.92 L 451.13,88.21 L 441.04,75.47 L 427.77,62.19 Z" /></svg></span></button>
       </div>
   </div>
 </div>
@@ -536,83 +522,34 @@ button.chapter-choice { cursor:pointer; }
   </section>
 </div>
 
-<div id="payment-page" class="overlay" hidden>
-  <section class="payment-card" aria-label="Passarel·la de pagament">
-    <div class="payment-heading">ELLES · EPISODIS ESPECIALS</div>
-    <h2 class="payment-title">Desbloqueja la història</h2>
-    <p class="payment-intro">Tria com vols accedir als capítols especials.</p>
-    <div class="price-options" role="group" aria-label="Opcions de desbloqueig">
-      <button type="button" class="price-option selected" data-plan="pack1" aria-pressed="true">
-        <span class="option-name">Paquet individual</span>
-        <span class="option-detail">Desbloqueja 1 episodi especial</span>
-        <span class="option-price">0,99 €</span>
-      </button>
-      <button type="button" class="price-option" data-plan="pack5" aria-pressed="false">
-        <span class="option-name">Paquet de 5</span>
-        <span class="option-detail">Desbloqueja 5 episodis especials</span>
-        <span class="option-price">3 €</span>
-      </button>
-      <button type="button" class="price-option" data-plan="pack15" aria-pressed="false">
-        <span class="option-name">Paquet de 15</span>
-        <span class="option-detail">Desbloqueja 15 episodis especials</span>
-        <span class="option-price">9,99 €</span>
-      </button>
-    </div>
-    <div class="payment-subheading">TRIA EL MÈTODE DE PAGAMENT</div>
-    <div class="payment-methods" role="group" aria-label="Mètode de pagament">
-      <button type="button" class="payment-method selected" data-method="PayPal" aria-pressed="true">
-        <svg viewBox="0 0 100 36" role="img" aria-label="PayPal"><path fill="#159bd7" d="M28 4h22c12 0 17 7 14 17-2 8-8 12-19 12H34l-2 3H19l5-25c.5-4 1.5-7 4-7z"/><path fill="#253b80" d="M38 1h22c12 0 17 7 14 17-2 8-8 12-19 12H44l-2 3H29l5-25c.5-4 1.5-7 4-7z"/><path fill="#159bd7" d="M43 8h12c6 0 8 3 7 8-1 5-4 7-10 7h-8l-2 9H31l4-20c1-3 3-4 8-4z"/></svg>
-        <span class="method-label">PayPal</span>
-      </button>
-      <button type="button" class="payment-method" data-method="Google Play" aria-pressed="false">
-        <svg viewBox="0 0 100 36" role="img" aria-label="Google Play"><path fill="#34a853" d="M30 4 52 18 30 32Z"/><path fill="#4285f4" d="m30 4 28 10-6 4Z"/><path fill="#fbbc04" d="m58 14 13 4-13 4-6-4Z"/><path fill="#ea4335" d="m30 32 28-10-6-4Z"/></svg>
-        <span class="method-label">Google Play</span>
-      </button>
-      <button type="button" class="payment-method" data-method="Visa" aria-pressed="false">
-        <svg viewBox="0 0 100 36" role="img" aria-label="Visa"><text x="50" y="26" text-anchor="middle" font-family="Arial,sans-serif" font-size="29" font-weight="900" font-style="italic" fill="#f5f7ff">VISA</text></svg>
-        <span class="method-label">Visa</span>
-      </button>
-    </div>
-    <button type="button" id="pay-button">Pagar amb PayPal</button>
-    <button type="button" id="payment-back">← Tornar als capítols</button>
-    <p class="payment-disclaimer">Entorn de demostració: el cobrament real s'haurà d'activar amb una passarel·la segura.</p>
-  </section>
-</div>
-
-<div id="admin-login" class="overlay" hidden>
-  <section class="admin-card" aria-label="Accés administrador">
-    <div class="admin-top"><h2>ELLES · ADMINISTRADOR</h2><button type="button" id="admin-login-close">✕</button></div>
-    <label for="admin-user">Usuari</label><input id="admin-user" autocomplete="username" placeholder="Usuari">
-    <label for="admin-pass">Clau</label><input id="admin-pass" type="password" autocomplete="current-password" placeholder="Contrasenya">
-    <div class="admin-actions"><button type="button" id="admin-login-submit">Entrar</button></div>
-    <p class="admin-note" id="admin-login-message">Accés restringit.</p>
-  </section>
-</div>
-<div id="admin-panel" class="overlay" hidden>
-  <section class="admin-card" aria-label="Menú administrador">
-    <div class="admin-top"><h2>ELLES · MENÚ ADMINISTRADOR</h2><button type="button" id="admin-close">✕</button></div>
-    <label for="admin-chapter">Capítol</label>
-    <select id="admin-chapter">
-      <option value="2">Capítol II · Sandra i Marc</option>
-      <option value="3">Capítol III · Laia la del poble</option>
-      <option value="4">Capítol IV · Laia la Punky</option>
-      <option value="5">Capítol V · El cul de la Gemma</option>
-      <option value="6">Capítol VI · Míriam número 1</option>
-      <option value="7">Capítol VII · Les bessones (Clickbait)</option>
-      <option value="8">Especial · Mariajo pegging</option>
-    </select>
-    <label for="admin-file">Pujar un arxiu de text (.txt)</label><input id="admin-file" type="file" accept=".txt,text/plain">
-    <label for="admin-text">O enganxar el text del capítol</label><textarea id="admin-text" placeholder="Enganxa aquí el text original del capítol..."></textarea>
-    <div class="admin-actions"><button type="button" id="admin-save-chapter">Guardar capítol</button><button type="button" id="admin-show-stats">Estadístiques</button></div>
-    <p class="admin-note" id="admin-save-message">El text es desa en aquest navegador i queda disponible en tornar a obrir aquest fitxer al mateix dispositiu.</p>
-    <div class="admin-stats" id="admin-stats" hidden><strong>LECTORS ÚNICS PER CAPÍTOL</strong><br>No hi ha dades de visites disponibles.<br><br><strong>ZONA GEOGRÀFICA</strong><br>No es pot determinar des d'un HTML local. Per obtenir lectors únics i zones cal publicar ELLES amb un servidor i activar analítica respectuosa amb el consentiment dels lectors.</div>
-    <p class="admin-note">Nota de seguretat: aquest accés és una barrera visual dins del fitxer HTML, no una autenticació segura de servidor.</p>
-  </section>
-</div>
 <div id="tomorrow-screen" class="tomorrow-screen" hidden aria-label="Pausa fins demà">
   <button type="button" id="wake-book" aria-label="Tornar a activar el llibre">...</button>
 </div>
 <footer></footer>
+
+<div id="patreon-page" class="overlay" hidden aria-modal="true" role="dialog" aria-labelledby="patreon-page-title">
+  <section class="modal-card patreon-page-card">
+    <h2 id="patreon-page-title">✦ CLUB ELLES · MEMBRESIA ✦</h2>
+    <p class="patreon-intro">Forma part d’aquesta història. Tria com vols donar suport a ELLES i participar en el seu univers creatiu.</p>
+    <div class="patreon-page-grid">
+      <article class="patreon-page-tier"><h3>☕ SUPORT</h3><div class="price">0,99 € <small>/ mes</small></div><p>Una petita aportació per ajudar a mantenir viu ELLES. Aquest nivell no desbloqueja continguts.</p></article>
+      <article class="patreon-page-tier"><h3>❤️ MECENES</h3><div class="price">3,99 € <small>/ mes</small></div><p>Accés a tots els continguts d’ELLES mentre la subscripció estigui activa.</p></article>
+      <article class="patreon-page-tier fan"><h3>🔥 FAN</h3><div class="price">7 € <small>/ mes</small></div><p>Accés a tots els continguts i un únic capítol personalitzat, ambientat amb la teva fantasia, en complir 1 any de subscripció Fan continuada.</p></article>
+      <article class="patreon-page-tier groupie"><h3>⭐ GROUPIE</h3><div class="price">25 € <small>/ any</small></div><p>Tots els avantatges i una creació privada literària i gràfica a partir de la teva idea, que rebràs per correu electrònic.</p></article>
+    </div>
+    <section class="patreon-rules"><h3>CONDICIONS DE LES RECOMPENSES</h3><ul>
+      <li>El premi Fan és un únic capítol i s’obté després de 12 mesos de subscripció Fan continuada.</li>
+      <li>El premi Groupie és una creació privada literària i gràfica, enviada per correu electrònic.</li>
+      <li>Les creacions privades no es publicaran ni es compartiran sense el consentiment de la persona que les ha encarregat.</li>
+      <li>No s’accepten idees ni encàrrecs que promoguin la violència o l’odi.</li>
+      <li>Els capítols especials són exclusius dels membres Patreon amb nivell Mecenes, Fan o Groupie actiu.</li>
+      <li>L’accés als continguts de pagament depèn de la vigència i verificació de la membresia corresponent.</li>
+    </ul></section>
+    <button type="button" class="patreon-pay-button" id="patreon-real-payment" disabled aria-disabled="true">OBRIR PAGAMENT A PATREON</button>
+    <p class="patreon-pay-note" id="patreon-pay-note">Enllaç de pagament pendent: cal afegir l’URL de la pàgina pròpia d’ELLES a Patreon per activar aquest botó.</p>
+    <button type="button" class="patreon-page-close" id="close-patreon-page">TORNAR A LA LLISTA DE CAPÍTOLS</button>
+  </section>
+</div>
 <script>
 let text = `No hi ha manera possible d'escriure el que he de dir sense que et caigui malament i em jutgis de seguida.
 
@@ -684,6 +621,13 @@ const nextButton = document.getElementById("next");
 const previousButton = document.getElementById("previous");
 const completeModal = document.getElementById("complete-modal");
 const chapterIndex = document.getElementById("chapter-index");
+const patreonPage = document.getElementById("patreon-page");
+const openPatreonPage = document.getElementById("open-patreon-page");
+const closePatreonPage = document.getElementById("close-patreon-page");
+openPatreonPage.addEventListener("click", () => { chapterIndex.hidden = true; patreonPage.hidden = false; });
+function closePatreonMembershipPage() { patreonPage.hidden = true; chapterIndex.hidden = false; }
+closePatreonPage.addEventListener("click", closePatreonMembershipPage);
+patreonPage.addEventListener("click", event => { if (event.target === patreonPage) closePatreonMembershipPage(); });
 const specialsToggle = document.getElementById("specials-toggle");
 const specialsList = document.getElementById("specials-list");
 specialsToggle.addEventListener("click", () => {
@@ -734,12 +678,6 @@ const scenes = [
   `<svg viewBox="0 0 240 90"><circle class="line" cx="120" cy="44" r="31"/><path class="line" d="M120 13v8m0 46v8M89 44h8m46 0h8M98 22l6 6m32 32 6 6m0-44-6 6m-32 32-6 6"/><path class="line" d="M120 28v17l12 8"/><path class="soft" d="M120 13a31 31 0 0 1 0 62Z"/></svg>`
 ];
 
-// Administració local: les credencials al codi del navegador no substitueixen un servidor segur.
-const adminUser = "Sid";
-const adminPassword = "Pueblo33@!";
-const adminLogin = document.getElementById("admin-login");
-const adminPanel = document.getElementById("admin-panel");
-const adminMessage = document.getElementById("admin-login-message");
 function estimateReadingTime(value) {
   const words = value.trim().split(/\s+/).filter(Boolean).length;
   return words ? `◷ ${Math.max(1, Math.ceil(words / 200))} min` : "◷ —";
@@ -846,29 +784,6 @@ try {
   for (const [key,value] of Object.entries(saved)) if (chapterTitles[key] && typeof value==="string" && value.trim()) chapterTexts[key]=value;
 } catch(e) {}
 refreshChapterMenu();
-document.getElementById("admin-open").addEventListener("click",()=>{chapterIndex.hidden=true;adminLogin.hidden=false;});
-document.getElementById("admin-login-close").addEventListener("click",()=>adminLogin.hidden=true);
-document.getElementById("admin-login-submit").addEventListener("click",()=>{
-  const u=document.getElementById("admin-user").value, p=document.getElementById("admin-pass").value;
-  if(u===adminUser && p===adminPassword){adminLogin.hidden=true;adminPanel.hidden=false;adminMessage.textContent="Accés correcte.";}
-  else adminMessage.textContent="Usuari o clau incorrectes.";
-});
-document.getElementById("admin-close").addEventListener("click",()=>adminPanel.hidden=true);
-document.getElementById("admin-file").addEventListener("change",async e=>{
-  const file=e.target.files?.[0]; if(!file)return;
-  document.getElementById("admin-text").value=await file.text();
-  document.getElementById("admin-save-message").textContent=`Arxiu carregat: ${file.name}. Prem «Guardar capítol» per incorporar-lo.`;
-});
-document.getElementById("admin-save-chapter").addEventListener("click",()=>{
-  const n=Number(document.getElementById("admin-chapter").value), value=document.getElementById("admin-text").value;
-  if(!value.trim()){document.getElementById("admin-save-message").textContent="Enganxa o selecciona primer un text.";return;}
-  chapterTexts[n]=value;
-  try { const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}"); saved[n]=value; localStorage.setItem("elles_admin_chapters",JSON.stringify(saved)); }
-  catch(e){document.getElementById("admin-save-message").textContent="No s'ha pogut desar al navegador. Comprova l'espai o els permisos.";return;}
-  document.getElementById("admin-save-message").textContent=`Capítol ${n} guardat correctament en aquest navegador.`;
-  refreshChapterMenu();
-});
-document.getElementById("admin-show-stats").addEventListener("click",()=>{document.getElementById("admin-stats").hidden=false;});
 
 function updateScene() {
   if (currentChapter === 2) {
@@ -1190,7 +1105,6 @@ if (homeButton) homeButton.addEventListener("click", () => {
   if (playing) stopTyping();
   stopReadAloud();
   completeModal.hidden = true;
-  paymentPage.hidden = true;
   chapterIndex.hidden = false;
   try { updateReadingStats(); } catch (error) { console.warn("No s'han pogut actualitzar les estadístiques:", error); }
 });
@@ -1203,6 +1117,14 @@ if (indexBackButton) indexBackButton.addEventListener("click", () => {
   chapterIndex.hidden = true;
 });
 function loadChapter(number) {
+  // Els capítols especials resten bloquejats fins que hi hagi verificació real de membresia Patreon al servidor.
+  if (number >= 8) {
+    chapterIndex.hidden = true;
+    patreonPage.hidden = false;
+    const note = document.getElementById("patreon-pay-note");
+    if (note) note.textContent = "Aquest capítol és exclusiu per a membres Patreon. La verificació automàtica de membresia encara no està connectada; no es pot concedir accés des d'aquest navegador.";
+    return;
+  }
   stopTyping();
   stopReadAloud();
   currentChapter = number;
@@ -1293,44 +1215,12 @@ voiceButton.addEventListener("click", () => {
   else if (playing) speakCurrentChunk();
 });
 
-const paymentPage = document.getElementById("payment-page");
-let selectedPlan = "episode";
-let selectedPaymentMethod = "PayPal";
-function updatePremiumEpisodeTotal() {
-  const count = document.querySelectorAll("#chapter-index .christmas-special:not(.coming-soon)").length;
-  const label = count === 1 ? "episodi" : "episodis";
-  document.getElementById("premium-episode-total").textContent = `${count} ${label}`;
-}
-updatePremiumEpisodeTotal();
-function openSpecialPayment() {
-  updatePremiumEpisodeTotal();
-  selectedPlan = "pack1";
-  document.querySelectorAll(".price-option").forEach(b => { const on=b.dataset.plan===selectedPlan; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
+document.getElementById("chapter-special").addEventListener("click", () => {
   chapterIndex.hidden = true;
-  paymentPage.hidden = false;
-  updatePayButton();
-}
-function updatePayButton() {
-  const planPrices = { pack1: "0,99 €", pack5: "3 €", pack15: "9,99 €" };
-  document.getElementById("pay-button").textContent = `Pagar ${planPrices[selectedPlan]} amb ${selectedPaymentMethod}`;
-}
-document.querySelectorAll(".price-option").forEach(button => button.addEventListener("click", () => {
-  selectedPlan = button.dataset.plan;
-  document.querySelectorAll(".price-option").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
-  updatePayButton();
-}));
-document.querySelectorAll(".payment-method").forEach(button => button.addEventListener("click", () => {
-  selectedPaymentMethod = button.dataset.method;
-  document.querySelectorAll(".payment-method").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
-  updatePayButton();
-}));
-document.getElementById("payment-back").addEventListener("click", () => { paymentPage.hidden=true; chapterIndex.hidden=false; });
-document.getElementById("pay-button").addEventListener("click", () => {
-  const plans = { pack1: "1 episodi especial (0,99 €)", pack5: "5 episodis especials (3 €)", pack15: "15 episodis especials (9,99 €)" };
-  alert(`Has seleccionat el paquet de ${plans[selectedPlan]} i el pagament amb ${selectedPaymentMethod}. La passarel·la encara no està connectada: no s'ha fet cap cobrament.`);
+  patreonPage.hidden = false;
+  const note = document.getElementById("patreon-pay-note");
+  if (note) note.textContent = "Aquest capítol és exclusiu per a membres Patreon. Per accedir-hi cal una subscripció Mecenes, Fan o Groupie activa i verificació del compte.";
 });
-document.getElementById("chapter-special").addEventListener("click", openSpecialPayment);
-document.getElementById("premium-stats-button").addEventListener("click", openSpecialPayment);
 document.getElementById("wake-book").addEventListener("click", () => {
   tomorrowScreen.hidden = true;
   reset();

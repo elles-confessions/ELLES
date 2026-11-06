@@ -180,7 +180,6 @@ body.light-reading .hint { color:#777; }
 .index-quick-button { width:40px; height:40px; min-width:40px; min-height:40px; padding:7px; display:flex; align-items:center; justify-content:center; border:1px solid #59434a; border-radius:10px; background:#202326; color:#f0a0b0; box-shadow:0 0 12px #d78a9120; }
 .index-quick-button svg { width:23px; height:23px; display:block; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .index-quick-button.instagram svg { fill:none; stroke-width:1.9; }
-#shortcut-open { border:1px solid red; }
 .index-quick-button:active { transform:scale(.96); }
 .shortcut-card { width:min(440px,100%); padding:24px 20px; border:1px solid #59434a; border-radius:13px; background:#191c1f; box-shadow:0 20px 70px #000b; color:var(--paper); }
 .shortcut-card h2 { color:var(--rose); font:16px monospace; letter-spacing:1px; margin:0 0 16px; }
@@ -384,6 +383,45 @@ button.chapter-choice { cursor:pointer; }
 .patreon-page-close { display:block; width:100%; margin-top:12px; min-height:42px; border:1px solid #59436c; border-radius:9px; background:transparent; color:#e8ddec; font:12px monospace; }
 @media(max-width:480px){.patreon-page-grid{grid-template-columns:1fr}.patreon-page-card{padding:17px 13px}}
 
+
+
+.chapter-discussion-cta{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px auto 2px;color:var(--paper);font:12px monospace;letter-spacing:.3px}
+.chapter-discussion-button{display:inline-flex;align-items:center;justify-content:center;width:42px;height:38px;border:1px solid rgba(215,138,145,.48);border-radius:9px;background:transparent;color:var(--rose);cursor:pointer}
+.chapter-discussion-button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.chapter-discussion-button:hover,.chapter-discussion-button:focus-visible{border-color:var(--rose);box-shadow:0 0 0 2px rgba(215,138,145,.16)}
+
+/* Comentaris per capítol */
+#comments-button { width:64px; min-width:64px; flex-basis:64px; height:46px; min-height:46px; border-color:rgba(215,138,145,.48); color:var(--rose); font-size:23px; }
+#comments-button:hover,#comments-button:focus-visible { border-color:var(--rose); box-shadow:0 0 0 2px rgba(215,138,145,.16); }
+.comments-card { width:min(560px,94vw); max-height:88vh; overflow:auto; padding-top:48px; }
+#close-comments { position:absolute; top:12px; right:14px; left:auto; margin:0; display:flex; align-items:center; justify-content:center; }
+.comments-subtitle { color:var(--muted,#aaa); font-size:12px; }
+.comment-form { display:grid; gap:10px; margin:16px 0; }
+.comment-form input,.comment-form textarea { width:100%; box-sizing:border-box; border:1px solid #59434a; border-radius:9px; background:#171315; color:#f4e8e5; padding:12px; font:13px monospace; }
+.comment-form textarea { min-height:88px; resize:vertical; }
+.comment-form label { color:#d9c8cb; font:12px monospace; }
+.comment-submit { min-height:44px; border:1px solid #a52d40; border-radius:9px; background:#a52d40; color:white; font:700 12px monospace; }
+.comment-item { padding:13px 0; border-top:1px solid #44363a; }
+.comment-meta { display:flex; justify-content:space-between; gap:8px; color:#c99ba2; font:11px monospace; }
+.comment-body { color:#f0e5e6; font:13px/1.55 monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+.comment-actions { display:flex; gap:14px; margin-top:8px; }
+.comment-actions button { border:0; background:none; color:#d99aa3; padding:3px 0; font:11px monospace; }
+.comment-empty { padding:20px 10px; text-align:center; color:#bcaeb1; font:12px/1.6 monospace; }
+.comment-warning { color:#aa9ba0; font:10px/1.5 monospace; }
+@media(max-width:480px){#comments-button{width:60px;min-width:60px;flex-basis:60px;height:44px;min-height:44px}}
+
+/* CAPTCHA intern ELLES */
+.elles-captcha{display:grid;gap:8px;padding:13px;border:1px solid #59434a;border-radius:10px;background:linear-gradient(145deg,#21191c,#171315)}
+.elles-captcha-heading{display:flex;align-items:center;gap:8px;color:#e6a6ae;font:700 10px monospace;letter-spacing:.5px}
+.elles-captcha-heading span{font-size:17px;color:#c96b78}
+.elles-captcha p{margin:0;color:#d9c8cb;font:12px/1.5 monospace}
+.elles-captcha-controls{display:flex;gap:8px}
+.elles-captcha-controls input{max-width:130px}
+.elles-captcha-refresh{width:44px;min-width:44px;border:1px solid #76515a;border-radius:8px;background:#302329;color:#f0cbd0;font-size:21px}
+.elles-captcha-feedback{color:#bda9ad!important;font-size:10px!important}
+.elles-captcha-feedback.ok{color:#8fd0a1!important}.elles-captcha-feedback.error{color:#f08b96!important}
+
+
 </style>
 
 </head>
@@ -422,6 +460,7 @@ button.chapter-choice { cursor:pointer; }
       <button type="button" id="animations-button" class="nav-arrow cinema-button" aria-label="Obrir animacions" title="Animacions">
         <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="16" cy="16" r="12.2"/><circle cx="16" cy="16" r="3.1"/><circle cx="16" cy="8.5" r="2.2"/><circle cx="22.8" cy="12.2" r="2.2"/><circle cx="20.2" cy="21.9" r="2.2"/><circle cx="11.8" cy="21.9" r="2.2"/><circle cx="9.2" cy="12.2" r="2.2"/><path d="M25.2 25.1c2.1 2.3 4.1 3.7 7.2 3.7 2.6 0 4.2-1.3 4.2-3.1 0-1.7-1.4-2.5-3.8-2.5h-3.1c-2.1 0-3.1-1.1-3.1-2.7 0-1.8 1.7-3.2 4.3-3.2h2.7"/><path d="M26.4 29.2h10.2M29.4 32.2h7.2"/></svg>
       </button>
+      <button type="button" id="comments-button" class="nav-arrow" aria-label="Obrir comentaris del capítol" title="Comentaris"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg></button>
       <button type="button" id="next" class="nav-arrow" aria-label="Capítol o fragment següent" title="Següent" disabled>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7"/></svg>
       </button>
@@ -438,7 +477,36 @@ button.chapter-choice { cursor:pointer; }
     <button type="button" id="close-animations" class="modal-close" aria-label="Tancar animacions" title="Tancar">×</button>
     <h2 id="animations-title">Animacions</h2>
     <p class="animations-caption">Petites escenes en moviment del llibre.</p>
-    <figure class="animation-view"><img src="animació/capitol-I-animacio.gif" alt="Animació del capítol I" loading="lazy"></figure>
+    <figure class="animation-view"><img id="chapter-animation-gif" src="" alt="Animació del capítol" hidden><p id="chapter-animation-empty" class="animations-caption">Animació pròximament.</p></figure>
+  </div>
+</div>
+
+
+<div id="comments-modal" class="overlay" hidden aria-modal="true" role="dialog" aria-labelledby="comments-title">
+  <div class="modal-card comments-card">
+    <button type="button" id="close-comments" class="modal-close" aria-label="Tancar comentaris" title="Tancar">×</button>
+    <p class="comments-subtitle">ELLES · DESPRÉS DE LLEGIR</p>
+    <h2 id="comments-title">Comentaris</h2>
+    <p id="comments-chapter-count" class="comments-subtitle">Comentaris d'aquest capítol</p>
+    <form id="comment-form" class="comment-form">
+      <label for="comment-name">Pseudònim (opcional)</label>
+      <input id="comment-name" maxlength="32" placeholder="Anònim" autocomplete="nickname">
+      <label for="comment-text">La teva confessió</label>
+      <textarea id="comment-text" maxlength="1200" required placeholder="Comparteix què n'has pensat..."></textarea>
+      <label><input id="comment-anonymous" type="checkbox" checked> Publicar anònimament</label>
+      <section class="elles-captcha" aria-labelledby="elles-captcha-title">
+        <div class="elles-captcha-heading"><span aria-hidden="true">✦</span><strong id="elles-captcha-title">ELLES CAPTCHA · PROVA QUE ETS HUMÀ</strong></div>
+        <p id="elles-captcha-question">Resol la petita prova per continuar.</p>
+        <div class="elles-captcha-controls">
+          <input id="elles-captcha-answer" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="2" aria-label="Resposta de la verificació" placeholder="Resposta">
+          <button type="button" id="elles-captcha-new" class="elles-captcha-refresh" title="Una altra prova" aria-label="Generar una altra prova">↻</button>
+        </div>
+        <p id="elles-captcha-feedback" class="elles-captcha-feedback" aria-live="polite">Completa la prova abans de publicar.</p>
+      </section>
+      <button class="comment-submit" type="submit">PUBLICAR COMENTARI</button>
+      <p class="comment-warning">Respectem els altres lectors. Els comentaris han de passar moderació abans de fer-se públics. No comparteixis dades personals.</p>
+    </form>
+    <div id="comments-list" aria-live="polite"><p class="comment-empty">Encara no hi ha comentaris. Sigues la primera persona a obrir el debat.</p></div>
   </div>
 </div>
 
@@ -461,6 +529,12 @@ button.chapter-choice { cursor:pointer; }
         <button type="button" class="rating-star" data-rating="5" aria-label="5 estrelles" aria-pressed="false">★</button>
       </div>
       <p class="rating-feedback" id="rating-feedback" aria-live="polite">Tria de 1 a 5 estrelles</p>
+      <div class="chapter-discussion-cta">
+        <span>Comentar / Tertúlia:</span>
+        <button type="button" class="chapter-discussion-button" id="chapter-discussion-button" aria-label="Obrir comentaris i tertúlia del capítol" title="Comentar / Tertúlia">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg>
+        </button>
+      </div>
     </section>
   </div>
 </div>
@@ -510,7 +584,7 @@ button.chapter-choice { cursor:pointer; }
   <div class="reading-stats floating-reading-stats" aria-live="polite">
       <div class="stats-grid">
         <div><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span>Temps llegint</span><strong id="reading-time">00:00</strong></div>
-        <div><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5.5c3.5-1.5 6.5-1 9 1.2v13c-2.5-2.2-5.5-2.7-9-1.2z"/><path d="M21 5.5c-3.5-1.5-6.5-1-9 1.2v13c2.5-2.2 5.5-2.7 9-1.2z"/></svg></span><span>Capítols</span><strong id="reading-chapters">0 / 7</strong></div>
+        <div><span class="stats-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5.5c3.5-1.5 6.5-1 9 1.2v13c-2.5-2.2-5.5-2.7-9-1.2z"/><path d="M21 5.5c-3.5-1.5-6.5-1-9 1.2v13c2.5-2.2 5.5-2.7 9-1.2z"/></svg></span><span>Capítols llegits</span><strong id="reading-chapters">0 / 7</strong></div>
         <button class="stats-patreon" id="open-patreon-page" type="button" aria-label="Obrir la pàgina de membresia d'ELLES" title="Membresia ELLES"><span class="stats-icon patreon-mark" aria-hidden="true"><svg class="patreon-custom-mark" viewBox="0 0 512 512" role="presentation"><path d="M 406.00,46.27 L 396.44,41.49 L 395.91,40.42 L 374.67,31.40 L 361.40,27.15 L 336.44,21.31 L 306.71,17.06 L 284.94,16.00 L 261.04,16.00 L 230.25,18.12 L 224.41,19.72 L 209.54,21.31 L 207.95,22.37 L 184.05,27.15 L 157.50,36.18 L 135.20,46.27 L 118.74,56.35 L 100.16,71.22 L 87.95,83.96 L 79.45,94.58 L 70.42,107.86 L 60.34,126.97 L 51.31,149.81 L 43.88,176.88 L 38.04,215.12 L 36.97,236.88 L 38.04,305.38 L 41.22,338.83 L 48.12,380.78 L 49.72,383.96 L 53.96,403.61 L 60.34,422.73 L 70.42,445.03 L 80.51,460.96 L 86.35,468.39 L 95.38,477.42 L 102.81,483.26 L 115.56,490.16 L 123.52,492.28 L 124.58,493.35 L 133.61,494.94 L 149.54,495.47 L 164.94,493.35 L 179.27,487.50 L 186.71,482.73 L 200.51,469.98 L 213.26,452.99 L 228.12,425.91 L 253.08,371.22 L 266.88,349.98 L 279.10,336.71 L 296.62,323.43 L 314.14,314.41 L 339.63,305.38 L 348.65,303.79 L 349.72,302.73 L 358.74,301.13 L 379.98,294.76 L 395.91,287.86 L 406.53,282.02 L 417.68,274.58 L 429.36,265.03 L 438.92,255.47 L 450.07,241.66 L 463.35,217.77 L 469.19,201.31 L 470.78,191.75 L 471.84,190.16 L 474.50,166.80 L 474.50,154.58 L 472.37,136.00 L 469.19,123.79 L 463.35,108.92 L 451.13,88.21 L 441.04,75.47 L 427.77,62.19 Z" /></svg></span></button>
       </div>
   </div>
@@ -815,6 +889,18 @@ try {
   for (const [key,value] of Object.entries(saved)) if (chapterTitles[key] && typeof value==="string" && value.trim()) chapterTexts[key]=value;
 } catch(e) {}
 refreshChapterMenu();
+// Assegura que el capítol IV (Laia Punky), que ja té text, quedi disponible.
+const laiaPunkyButton = document.getElementById("chapter-four");
+if (laiaPunkyButton && chapterTexts[4] && chapterTexts[4].trim()) {
+  laiaPunkyButton.disabled = false;
+  laiaPunkyButton.setAttribute("aria-disabled", "false");
+  laiaPunkyButton.classList.remove("locked");
+  laiaPunkyButton.classList.add("available");
+  if (!laiaPunkyButton.dataset.openHandler) {
+    laiaPunkyButton.addEventListener("click", () => loadChapter(4));
+    laiaPunkyButton.dataset.openHandler = "true";
+  }
+}
 
 function updateScene() {
   if (currentChapter === 2) {
@@ -1245,6 +1331,90 @@ voiceButton.addEventListener("click", () => {
   else if (!playing && position < text.length) startChunk();
   else if (playing) speakCurrentChunk();
 });
+
+
+// Espai de comentaris per capítol. En aquesta versió, les dades són locals al dispositiu.
+const commentsModal = document.getElementById('comments-modal');
+const animationsButton = document.getElementById('animations-button');
+const animationsModal = document.getElementById('animations-modal');
+const chapterAnimationGif = document.getElementById('chapter-animation-gif');
+const chapterAnimationEmpty = document.getElementById('chapter-animation-empty');
+const chapterAnimations = {1:'assets/cinema/cap01.gif'};
+function openChapterCinema(){
+  const gifPath = chapterAnimations[currentChapter];
+  if (gifPath) {
+    chapterAnimationGif.src = gifPath;
+    chapterAnimationGif.alt = `Animació del capítol ${currentChapter}`;
+    chapterAnimationGif.hidden = false;
+    chapterAnimationEmpty.hidden = true;
+  } else {
+    chapterAnimationGif.removeAttribute('src');
+    chapterAnimationGif.hidden = true;
+    chapterAnimationEmpty.hidden = false;
+  }
+  animationsModal.hidden = false;
+}
+animationsButton.addEventListener('click', openChapterCinema);
+document.getElementById('close-animations').addEventListener('click',()=>{animationsModal.hidden=true;chapterAnimationGif.removeAttribute('src');});
+animationsModal.addEventListener('click',e=>{if(e.target===animationsModal){animationsModal.hidden=true;chapterAnimationGif.removeAttribute('src');}});
+const commentsButton = document.getElementById('comments-button');
+const commentsList = document.getElementById('comments-list');
+const commentsForm = document.getElementById('comment-form');
+
+// CAPTCHA intern d'ELLES: repte aritmètic aleatori abans de publicar.
+const captchaQuestion = document.getElementById('elles-captcha-question');
+const captchaAnswer = document.getElementById('elles-captcha-answer');
+const captchaFeedback = document.getElementById('elles-captcha-feedback');
+let captchaExpected = null;
+let captchaIssuedAt = 0;
+function newEllesCaptcha(){
+  const a = Math.floor(Math.random()*8)+2;
+  const b = Math.floor(Math.random()*8)+1;
+  const subtract = Math.random() > .5;
+  const left = subtract ? Math.max(a,b) : a;
+  const right = subtract ? Math.min(a,b) : b;
+  const op = subtract ? '−' : '+';
+  captchaExpected = subtract ? left-right : left+right;
+  captchaIssuedAt = Date.now();
+  captchaQuestion.textContent = `Quant fa ${left} ${op} ${right}?`;
+  captchaAnswer.value = '';
+  captchaFeedback.textContent = 'Completa la prova abans de publicar.';
+  captchaFeedback.className = 'elles-captcha-feedback';
+}
+document.getElementById('elles-captcha-new').addEventListener('click',newEllesCaptcha);
+newEllesCaptcha();
+function currentCommentKey(){ return 'elles-comments-' + (document.getElementById('main-chapter-label')?.textContent || 'capitol').trim() + '-' + (document.getElementById('main-chapter-title')?.textContent || '').trim(); }
+function renderComments(){
+  const items = JSON.parse(localStorage.getItem(currentCommentKey()) || '[]');
+  document.getElementById('comments-chapter-count').textContent = items.length + (items.length===1 ? ' comentari guardat en aquest dispositiu' : ' comentaris guardats en aquest dispositiu');
+  commentsList.replaceChildren();
+  if(!items.length){ const p=document.createElement('p'); p.className='comment-empty'; p.textContent='Encara no hi ha comentaris guardats en aquest dispositiu. Sigues la primera persona a obrir el debat.'; commentsList.append(p); return; }
+  items.slice().reverse().forEach((item,index)=>{
+    const article=document.createElement('article'); article.className='comment-item';
+    const meta=document.createElement('div'); meta.className='comment-meta';
+    const author=document.createElement('strong'); author.textContent=item.name || 'Anònim';
+    const date=document.createElement('span'); date.textContent=new Date(item.date).toLocaleString('ca-ES');
+    meta.append(author,date);
+    const body=document.createElement('p'); body.className='comment-body'; body.textContent=item.text;
+    const actions=document.createElement('div'); actions.className='comment-actions';
+    const like=document.createElement('button'); like.type='button'; like.textContent='♡ M’agrada ('+(item.likes||0)+')'; like.addEventListener('click',()=>{item.likes=(item.likes||0)+1; const all=JSON.parse(localStorage.getItem(currentCommentKey())||'[]'); const actual=all.find(x=>x.id===item.id); if(actual){actual.likes=item.likes;localStorage.setItem(currentCommentKey(),JSON.stringify(all));renderComments();}});
+    const report=document.createElement('button'); report.type='button'; report.textContent='Denunciar'; report.addEventListener('click',()=>alert('La denúncia quedarà disponible quan connectem el servei de moderació d’ELLES.'));
+    actions.append(like,report); article.append(meta,body,actions); commentsList.append(article);
+  });
+}
+function openChapterComments(){
+  // Si s'obre des del bloc de valoracions final, amaga primer la finestra de final de capítol perquè no tapi la tertúlia.
+  const completeModal = document.getElementById('complete-modal');
+  if (completeModal) completeModal.hidden = true;
+  commentsModal.hidden = false;
+  commentsModal.style.zIndex = '40';
+  renderComments();
+}
+commentsButton.addEventListener('click',openChapterComments);
+document.getElementById('chapter-discussion-button').addEventListener('click',openChapterComments);
+document.getElementById('close-comments').addEventListener('click',()=>commentsModal.hidden=true);
+commentsModal.addEventListener('click',e=>{if(e.target===commentsModal)commentsModal.hidden=true;});
+commentsForm.addEventListener('submit',e=>{e.preventDefault();const text=document.getElementById('comment-text').value.trim();if(!text)return;const answer=Number(captchaAnswer.value.trim());if(!captchaAnswer.value.trim() || answer!==captchaExpected || Date.now()-captchaIssuedAt<1200){captchaFeedback.textContent='Verificació incorrecta. Revisa la resposta i torna-ho a provar.';captchaFeedback.className='elles-captcha-feedback error';if(answer===captchaExpected && Date.now()-captchaIssuedAt<1200)captchaFeedback.textContent='Espera un moment abans de publicar.';return;}captchaFeedback.textContent='Verificació correcta.';captchaFeedback.className='elles-captcha-feedback ok';const anonymous=document.getElementById('comment-anonymous').checked;const name=anonymous?'Anònim':(document.getElementById('comment-name').value.trim()||'Lector/a');const all=JSON.parse(localStorage.getItem(currentCommentKey())||'[]');all.push({id:Date.now().toString(),name,text,date:new Date().toISOString(),likes:0});localStorage.setItem(currentCommentKey(),JSON.stringify(all));document.getElementById('comment-text').value='';newEllesCaptcha();renderComments();commentsModal.hidden=true;});
 
 document.getElementById("chapter-special").addEventListener("click", () => {
   chapterIndex.hidden = true;

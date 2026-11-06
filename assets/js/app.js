@@ -45,7 +45,7 @@ Era jove innocent, no em vaig adonar de com estava de penjada fins que va aparè
 -Ostres, un altre cop? -va dir una de les seves amigues.
 La Laia també desapareixia dos o tres dies sense avisar a ningú. La sogra em trucava desesperada i havia d'anar al consolar-la. 
 Sense adonar-me havia perdut tota atracció sexual cap a ella. Sabia que volia follar però tot i així, no sé perquè vaig decidir deixar-la abans de fornicar. Suposo que sabia que un minut després de fer sexe amb ella la deixaria i ho trobava despreciable. Al cap i a la fi no era tant mala persona com creia.`;
-const chapterSevenText = `És una pràctica habitual en mi acabar al llit borratxo i obrir APPs de cites. 
+const chapterMariajoText = `És una pràctica habitual en mi acabar al llit borratxo i obrir APPs de cites. 
 En una d'aquestes nits vaig fer un match amb la Mariajo. Una dona oberta de ment i sense pèls a la llengua a l'hora de parlar de sexe. No vam tardar gaire en fer sexting. Quina delícia escriure les teves fantasies i que et comparteixin els seus desitjos. Quin art literari quan dius la, et repasso el cos amb uns dits fins arribar al teu entrcuix.
 Vam dir de quedar, jo no estava convençut. Per una part, sóc un urbanita empedreït i hauria de desplaçar-me en un poble de comarca. I en segon lloc, de vegades una fantasia és millor que quedi en l'imaginari. Ho dic per experiència.
 Vaig anul·lar la cita amb alguna excusa però la nostre ciber relació sexual continuava. Vam fer una videotrucada per mirar-nos als ulls en el moment que entràvem al clímax. No ens va acabar de convèncer a cap dels dos. Apart ella deia que sinó mirava hentai de mostres amb tentacles, no podia corre's sola.
@@ -53,8 +53,9 @@ En una de les nostres converses em va explicar el sexe amb la seva antiga parell
 -Feieu pegging?!
 Sí que en feien. Va dir que li agradava i que mai ho havia fet amb un home. La meva pròstata es va excitar, de seguida estàvem tots dos buscant models de strap-on. Un cop pagada la comanda vaig començar a fantasejar, quasi no dormo aquella nit. Mai havia viscut aquella experiència i era.el moment. Tenia quaranta-sis anys.
 Vam fixar de nou una cita, aquest cop vaig pujar al.tren sense pensar-ho. Amb el strap-on a la motxilla amb la sensació que portava una bomba i que cap passatger podia saber-ho.`;
-const chapterTitles = {1:"Compartir és hippy",2:"Sandra i Marc",3:"Laia la del poble",4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1",7:"Especial: Mariajo pegging"};
-const chapterTexts = {1:chapterOneText,2:chapterTwoText,3:chapterThreeText,4:chapterFourText,7:chapterSevenText};
+const chapterSevenText = ""; // Capítol VII creat, pendent d’incorporar-hi el text.
+const chapterTitles = {1:"Compartir és hippy",2:"Sandra i Marc",3:"Laia la del poble",4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1",7:"Les bessones (Clickbait)",8:"Especial: Mariajo pegging"};
+const chapterTexts = {1:chapterOneText,2:chapterTwoText,3:chapterThreeText,4:chapterFourText,7:chapterSevenText,8:chapterMariajoText};
 let currentChapter = 1;
 
 const story = document.getElementById("story");
@@ -92,55 +93,6 @@ const shortcutHelp = document.getElementById("shortcut-help");
 document.getElementById("shortcut-open").addEventListener("click", () => { shortcutHelp.hidden = false; });
 document.getElementById("shortcut-close").addEventListener("click", () => { shortcutHelp.hidden = true; });
 shortcutHelp.addEventListener("click", (event) => { if (event.target === shortcutHelp) shortcutHelp.hidden = true; });
-// Compte d'usuari: perfil i safata de missatges desats localment al navegador.
-const accountPage = document.getElementById("account-page");
-const accountProfileKey = "elles_user_profile_v1";
-const accountMessagesKey = "elles_admin_messages_v1";
-function loadAccountData() {
-  try {
-    const profile = JSON.parse(localStorage.getItem(accountProfileKey) || "{}");
-    document.getElementById("account-firstname").value = profile.firstName || "";
-    document.getElementById("account-lastname").value = profile.lastName || "";
-  } catch (e) {}
-  const orders = JSON.parse(localStorage.getItem("elles_orders_v1") || "[]");
-  document.getElementById("account-orders").textContent = orders.length
-    ? orders.map((o,i) => `${i+1}. ${o.date || "Data no disponible"} · ${o.description || "Comanda"} · ${o.status || "Pendent"}`).join("\n")
-    : "Encara no tens cap comanda registrada.";
-}
-document.getElementById("account-open").addEventListener("click", () => { loadAccountData(); accountPage.hidden = false; });
-document.getElementById("account-close").addEventListener("click", () => { accountPage.hidden = true; });
-accountPage.addEventListener("click", event => { if (event.target === accountPage) accountPage.hidden = true; });
-document.getElementById("account-save").addEventListener("click", () => {
-  const profile = {
-    firstName: document.getElementById("account-firstname").value.trim(),
-    lastName: document.getElementById("account-lastname").value.trim()
-  };
-  try {
-    localStorage.setItem(accountProfileKey, JSON.stringify(profile));
-    document.getElementById("account-profile-status").textContent = "Dades personals guardades en aquest dispositiu.";
-  } catch (e) {
-    document.getElementById("account-profile-status").textContent = "No s'han pogut guardar les dades en aquest navegador.";
-  }
-});
-document.getElementById("account-send-message").addEventListener("click", () => {
-  const subject = document.getElementById("account-message-subject").value.trim();
-  const body = document.getElementById("account-message-body").value.trim();
-  const status = document.getElementById("account-message-status");
-  if (!body) { status.textContent = "Escriu un missatge abans d'enviar-lo."; return; }
-  const profile = (() => { try { return JSON.parse(localStorage.getItem(accountProfileKey) || "{}"); } catch(e) { return {}; } })();
-  const entry = { subject: subject || "Missatge des d'ELLES", body, sender: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(), date: new Date().toLocaleString("ca-ES") };
-  try {
-    const messages = JSON.parse(localStorage.getItem(accountMessagesKey) || "[]");
-    messages.push(entry);
-    localStorage.setItem(accountMessagesKey, JSON.stringify(messages));
-    document.getElementById("account-message-subject").value = "";
-    document.getElementById("account-message-body").value = "";
-    status.textContent = "Missatge desat a la safata local. Encara no s'ha enviat a l'administrador perquè falta connectar el servidor.";
-  } catch (e) {
-    status.textContent = "No s'ha pogut desar el missatge en aquest dispositiu.";
-  }
-});
-
 const tomorrowScreen = document.getElementById("tomorrow-screen");
 const themeToggle = document.getElementById("theme-toggle");
 themeToggle.addEventListener("click", () => {
@@ -178,7 +130,7 @@ function estimateReadingTime(value) {
 }
 function renderChapterListRatings() {
   const saved = getChapterRatings();
-  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",7:"chapter-special"};
+  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",8:"chapter-special"};
   for (const [number, id] of Object.entries(ids)) {
     const button = document.getElementById(id);
     const meta = button?.querySelector(".chapter-meta");
@@ -207,7 +159,7 @@ function refreshChapterMenu() {
       button.className="chapter-choice locked";
       button.innerHTML=`<span class="chapter-name">Capítol ${["","","","","IV","V","VI"][n]}: ${names[n]}</span><span class="chapter-meta"><span class="chapter-time" id="time-${suffix}">◷ —</span><span class="chapter-arrow" id="chapter-${suffix}-status" aria-hidden="true">›</span></span>`;
       button.addEventListener("click",()=>loadChapter(n));
-      const indexBack=document.getElementById("admin-open"); chapterIndex.querySelector(".index-card").insertBefore(button,indexBack);
+      const chapterSeven=document.getElementById("chapter-seven"); const indexBack=document.getElementById("admin-open"); chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven || indexBack);
     }
     if (button && chapterTexts[n]) {
       button.className="chapter-choice available";
@@ -216,8 +168,19 @@ function refreshChapterMenu() {
       if(status) status.textContent="›"; status.classList.add("chapter-arrow");
     }
   }
-  for (const n of [1,2,3,4,5,6,7]) {
-    const suffix=["","one","two","three","four","five","six","seven"][n];
+  const chapterSevenButton=document.getElementById("chapter-seven");
+  if (chapterSevenButton) {
+    const hasText=typeof chapterTexts[7] === "string" && chapterTexts[7].trim().length>0;
+    chapterSevenButton.disabled=!hasText;
+    chapterSevenButton.setAttribute("aria-disabled",String(!hasText));
+    chapterSevenButton.className=`chapter-choice ${hasText ? "available" : "locked"}`;
+    if (hasText && !chapterSevenButton.dataset.openHandler) {
+      chapterSevenButton.addEventListener("click",()=>loadChapter(7));
+      chapterSevenButton.dataset.openHandler="true";
+    }
+  }
+  for (const n of [1,2,3,4,5,6,8]) {
+    const suffix=["","one","two","three","four","five","six","seven","seven"][n];
     const time=document.getElementById(`time-${suffix}`);
     if(time) time.textContent=estimateReadingTime(chapterTexts[n] || "");
   }
@@ -225,6 +188,8 @@ function refreshChapterMenu() {
 }
 try {
   const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}");
+  // Migra el text especial antic del número 7 a la clau interna 8.
+  if (typeof saved["7"] === "string" && saved["7"].trim() && !saved["8"]) { saved["8"]=saved["7"]; delete saved["7"]; localStorage.setItem("elles_admin_chapters",JSON.stringify(saved)); }
   for (const [key,value] of Object.entries(saved)) if (chapterTitles[key] && typeof value==="string" && value.trim()) chapterTexts[key]=value;
 } catch(e) {}
 refreshChapterMenu();
@@ -236,13 +201,6 @@ document.getElementById("admin-login-submit").addEventListener("click",()=>{
   else adminMessage.textContent="Usuari o clau incorrectes.";
 });
 document.getElementById("admin-close").addEventListener("click",()=>adminPanel.hidden=true);
-document.getElementById("admin-show-messages").addEventListener("click",()=>{
-  const box=document.getElementById("admin-messages");
-  let messages=[];
-  try { messages=JSON.parse(localStorage.getItem("elles_admin_messages_v1")||"[]"); } catch(e) {}
-  box.hidden=false;
-  box.textContent=messages.length ? messages.map((m,i)=>`${i+1}. ${m.date||""} · ${m.sender||"Lector/a"}\n${m.subject||"Sense assumpte"}\n${m.body||""}`).join("\n\n──────────\n\n") : "Encara no hi ha missatges desats en aquest dispositiu.";
-});
 document.getElementById("admin-file").addEventListener("change",async e=>{
   const file=e.target.files?.[0]; if(!file)return;
   document.getElementById("admin-text").value=await file.text();
@@ -260,24 +218,6 @@ document.getElementById("admin-save-chapter").addEventListener("click",()=>{
 document.getElementById("admin-show-stats").addEventListener("click",()=>{document.getElementById("admin-stats").hidden=false;});
 
 function updateScene() {
-  if (currentChapter === 3) {
-    // Il·lustracions pròpies del capítol III, una per cada paràgraf.
-    const chapterThreeScenes = [
-      `<svg viewBox="0 0 240 90"><path class="line" d="M18 72h204M35 72V40l22-18 22 18v32M43 48h28M49 72V57h16v15"/><circle class="soft" cx="181" cy="24" r="12"/><path class="line" d="M181 5v-4m0 46v-4m-19-19h-4m46 0h-4m-33-14-3-3m34 34-3-3m0-28 3-3m-34 34 3-3"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M25 72h190M47 72V36l25-19 25 19v36M55 45h34M62 72V56h20v16"/><path class="line" d="M137 70 158 19l21 51m-31-25h20m-28 25h37"/><path class="soft" d="M158 19l21 51h-42z"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M35 72 52 18l17 54m-26-18h18M100 72l16-45 16 45m-23-17h14"/><path class="line" d="M151 64c13-19 25-19 38 0m-19-31v39m-18-8h36"/><path class="soft" d="M52 18l17 54H35z"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M24 72V35l96-22 96 22v37M40 39h160M53 72V48h134v24"/><path class="line" d="M86 48v24m68-24v24M110 72V52h20v20"/><path class="soft" d="M24 35 120 13l96 22H24Z"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M120 72V23m0 13C98 11 75 19 77 39c17 8 32 5 43-3Zm0 8c22-27 45-19 43 1-17 8-32 5-43-1Z"/><circle class="soft" cx="120" cy="19" r="7"/><path class="line" d="M95 72h50"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M25 72h190M48 72V31h144v41M58 42h124M58 53h124"/><path class="line" d="M82 31v41m76-41v41M108 72V53h24v19"/><path class="soft" d="M48 31h144v11H48z"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M20 72c28-19 47-19 75 0s47 19 75 0 33-17 50 0"/><path class="line" d="M42 64 57 29l15 35m-23-12h16M143 65l13-31 13 31m-20-12h14"/><path class="soft" d="M57 29 72 64H42z"/></svg>`,
-      `<svg viewBox="0 0 240 90"><path class="line" d="M25 72h190M42 72c8-21 17-32 31-32s23 11 31 32m24 0c8-21 17-32 31-32s23 11 31 32"/><path class="line" d="M120 12v60m-8-48 8-12 8 12"/><path class="soft" d="M112 60h16v12h-16z"/></svg>`
-    ];
-    const visibleFragment = text.slice(0, position);
-    const fragmentIndex = Math.min(visibleFragment.split(/\n+/).length - 1, chapterThreeScenes.length - 1);
-    scene.innerHTML = chapterThreeScenes[Math.max(0, fragmentIndex)];
-    return;
-  }
-
   if (currentChapter === 2) {
     // Una il·lustració simbòlica per a cada fragment real del capítol II.
     // El recompte es basa en els salts de línia del text, no en índexs aproximats.
@@ -324,6 +264,15 @@ function updateCumulativeWordsRead() {
   try { localStorage.setItem("elles_words_read_by_chapter", JSON.stringify(saved)); } catch (e) {}
   return Object.values(saved).reduce((sum, value) => sum + Math.max(0, Number(value) || 0), 0);
 }
+// Reinici únic de l'estat de lectura: tots els capítols tornen a quedar pendents.
+try {
+  if (localStorage.getItem("elles_all_chapters_pending_v1") !== "1") {
+    localStorage.setItem("elles_read_chapters", "[]");
+    localStorage.setItem("elles_words_read_by_chapter", "{}");
+    localStorage.setItem("elles_all_chapters_pending_v1", "1");
+  }
+} catch (e) {}
+
 function getReadChapters() {
   try { const value = JSON.parse(localStorage.getItem("elles_read_chapters") || "[]"); return Array.isArray(value) ? value.map(Number) : []; } catch(e) { return []; }
 }
@@ -347,10 +296,11 @@ function updateReadingStats() {
     : `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
   const wordsRead = updateCumulativeWordsRead();
   const percent = Math.floor((position / text.length) * 100);
-  document.getElementById("reading-time").textContent = timeText;
-  document.getElementById("reading-total-words").textContent = wordsRead.toLocaleString("ca-ES");
+  const readingTime = document.getElementById("reading-time");
+  const readingTotalWords = document.getElementById("reading-total-words");
+  if (readingTime) readingTime.textContent = timeText;
+  if (readingTotalWords) readingTotalWords.textContent = wordsRead.toLocaleString("ca-ES");
   updateChapterCount();
-  updatePremiumEpisodeTotal();
 }
 function updateProgress() {
   const left = Math.ceil(((text.length - position) / text.length) * 100);
@@ -423,6 +373,15 @@ function finishChunkDisplay() {
       endMark.className = "chapter-end-mark";
       endMark.textContent = "***";
       story.appendChild(endMark);
+    }
+    // Animació del capítol I: apareix dins la caixa de lectura en acabar el text.
+    if (currentChapter === 1 && !story.querySelector(".chapter-one-animation")) {
+      const animation = document.createElement("img");
+      animation.className = "chapter-one-animation";
+      animation.src = "animació/capitol-I-animacio.gif";
+      animation.alt = "Dos infants ballant alegrement al pati";
+      animation.loading = "lazy";
+      story.appendChild(animation);
     }
     completionPending = true;
     status.textContent = "TEXT COMPLETAT · CONTINUA";
@@ -552,6 +511,18 @@ function previousChunk() {
 startButton.addEventListener("click", startChunk);
 nextButton.addEventListener("click", nextChunk);
 previousButton.addEventListener("click", previousChunk);
+
+// Panell d'animacions accessible des del botó central inferior.
+const animationsModal = document.getElementById("animations-modal");
+const animationsButton = document.getElementById("animations-button");
+const closeAnimationsButton = document.getElementById("close-animations");
+function closeAnimations() { animationsModal.hidden = true; }
+animationsButton.addEventListener("click", () => { animationsModal.hidden = false; closeAnimationsButton.focus(); });
+closeAnimationsButton.addEventListener("click", closeAnimations);
+animationsModal.addEventListener("click", event => { if (event.target === animationsModal) closeAnimations(); });
+document.addEventListener("keydown", event => { if (event.key === "Escape" && !animationsModal.hidden) closeAnimations(); });
+
+
 story.addEventListener("click", () => {
   // Durant l'efecte màquina d'escriure, un toc revela només
   // la resta del fragment actual, sense saltar-se la resta del capítol.
@@ -573,19 +544,21 @@ story.addEventListener("click", () => {
   }
   if (story.querySelector(".pause-dots")) nextChunk();
 });
-function goToEpisodeList() {
+document.getElementById("now-button").addEventListener("click", () => {
+  stopReadAloud();
+  completeModal.hidden = true;
+  updateReadingStats();
+  chapterIndex.hidden = false;
+});
+const homeButton = document.getElementById("home-button");
+if (homeButton) homeButton.addEventListener("click", () => {
   if (playing) stopTyping();
   stopReadAloud();
   completeModal.hidden = true;
   paymentPage.hidden = true;
-  adminLogin.hidden = true;
-  adminPanel.hidden = true;
-  tomorrowScreen.hidden = true;
-  updateReadingStats();
   chapterIndex.hidden = false;
-}
-document.getElementById("now-button").addEventListener("click", goToEpisodeList);
-document.getElementById("home-button").addEventListener("click", goToEpisodeList);
+  try { updateReadingStats(); } catch (error) { console.warn("No s'han pogut actualitzar les estadístiques:", error); }
+});
 document.getElementById("tomorrow-button").addEventListener("click", () => {
   completeModal.hidden = true;
   tomorrowScreen.hidden = false;
@@ -608,7 +581,7 @@ function loadChapter(number) {
   completeModal.hidden = true; chapterIndex.hidden = true;
   startButton.disabled = false; nextButton.disabled = true; previousButton.disabled = true;
   status.textContent = "PREPARAT";
-  document.getElementById("main-chapter-label").textContent = number === 7 ? "ESPECIAL" : `CAPÍTOL ${["","I","II","III","IV","V","VI"][number]}`;
+  document.getElementById("main-chapter-label").textContent = number === 8 ? "ESPECIAL" : `CAPÍTOL ${["","I","II","III","IV","V","VI","VII"][number]}`;
   document.getElementById("main-chapter-title").textContent = chapterTitles[number] || "";
   document.getElementById("main-chapter-subtitle").textContent = number === 1 ? "(Puto hippy)" : "";
   updateProgress(); updateScene(); updateReadingStats();
@@ -686,15 +659,9 @@ const paymentPage = document.getElementById("payment-page");
 let selectedPlan = "episode";
 let selectedPaymentMethod = "PayPal";
 function updatePremiumEpisodeTotal() {
-  const read = new Set(getReadChapters());
-  const count = [...document.querySelectorAll("#chapter-index .christmas-special:not(.coming-soon)")]
-    .filter(episode => {
-      const chapterNumber = Number(episode.dataset.chapter);
-      return !episode.classList.contains("completed") && !(chapterNumber && read.has(chapterNumber));
-    }).length;
+  const count = document.querySelectorAll("#chapter-index .christmas-special:not(.coming-soon)").length;
   const label = count === 1 ? "episodi" : "episodis";
-  const total = document.getElementById("premium-episode-total");
-  if (total) total.textContent = `${count} ${label}`;
+  document.getElementById("premium-episode-total").textContent = `${count} ${label}`;
 }
 updatePremiumEpisodeTotal();
 function openSpecialPayment() {
@@ -719,7 +686,7 @@ document.querySelectorAll(".payment-method").forEach(button => button.addEventLi
   document.querySelectorAll(".payment-method").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
   updatePayButton();
 }));
-document.getElementById("payment-back").addEventListener("click", goToEpisodeList);
+document.getElementById("payment-back").addEventListener("click", () => { paymentPage.hidden=true; chapterIndex.hidden=false; });
 document.getElementById("pay-button").addEventListener("click", () => {
   const plans = { pack1: "1 episodi especial (0,99 €)", pack5: "5 episodis especials (3 €)", pack15: "15 episodis especials (9,99 €)" };
   alert(`Has seleccionat el paquet de ${plans[selectedPlan]} i el pagament amb ${selectedPaymentMethod}. La passarel·la encara no està connectada: no s'ha fet cap cobrament.`);
@@ -728,7 +695,7 @@ document.getElementById("chapter-special").addEventListener("click", openSpecial
 document.getElementById("premium-stats-button").addEventListener("click", openSpecialPayment);
 document.getElementById("wake-book").addEventListener("click", () => {
   tomorrowScreen.hidden = true;
-  goToEpisodeList();
+  reset();
 });
 updateProgress();
 updateChapterCount();

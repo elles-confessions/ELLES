@@ -1,4 +1,4 @@
-# ELLES — Confessions d'un seductor
+# ELLES: Confessions d'un borratxo 
 
 Paquet preparat per publicar amb GitHub Pages.
 

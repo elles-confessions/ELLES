@@ -797,24 +797,30 @@ floatingStats.addEventListener("animationend", event => {
 const shortcutHelp = document.getElementById("shortcut-help");
 let deferredInstallPrompt = null;
 const shortcutButton = document.getElementById("shortcut-open");
-document.getElementById("desktop-download-open").addEventListener("click", () => { shortcutButton.click(); });
+const desktopDownloadButton = document.getElementById("desktop-download-open");
+if (desktopDownloadButton) desktopDownloadButton.addEventListener("click", () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.finally(() => { deferredInstallPrompt = null; });
+  } else if (shortcutHelp) shortcutHelp.hidden = false;
+});
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  shortcutButton.title = "Instal·lar ELLES";
+  if (desktopDownloadButton) desktopDownloadButton.title = "Instal·lar ELLES";
 });
-shortcutButton.addEventListener("click", async () => {
+if (shortcutButton) shortcutButton.addEventListener("click", async () => {
   if (deferredInstallPrompt) {
     deferredInstallPrompt.prompt();
     await deferredInstallPrompt.userChoice;
     deferredInstallPrompt = null;
     return;
   }
-  shortcutHelp.hidden = false;
+  if (shortcutHelp) shortcutHelp.hidden = false;
 });
 window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
-  shortcutButton.title = "ELLES instal·lat";
+  if (desktopDownloadButton) desktopDownloadButton.title = "ELLES instal·lat";
 });
 document.getElementById("shortcut-close").addEventListener("click", () => { shortcutHelp.hidden = true; });
 shortcutHelp.addEventListener("click", (event) => { if (event.target === shortcutHelp) shortcutHelp.hidden = true; });

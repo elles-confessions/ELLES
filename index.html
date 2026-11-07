@@ -209,7 +209,11 @@ body.light-reading .hint { color:#777; }
 
 .index-title-image { display:block; width:100%; max-width:100%; height:auto; max-height:220px; object-fit:contain; margin:0 auto 14px; }
 .index-heading .index-label { display:block; margin-top:0; letter-spacing:3px; font:12px monospace; text-align:left; }
-    .specials-toggle { width:100%; min-height:42px; display:flex; align-items:center; justify-content:center; gap:9px; margin:10px 0 8px; padding:9px 14px; border:1px solid #b58ae8; border-radius:9px; background:linear-gradient(135deg,#7442a5,#512477); color:#fff; font:600 13px monospace; letter-spacing:1px; box-shadow:0 3px 14px #8b50c455; cursor:pointer; }
+    .specials-toggle { width:100%; min-height:112px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; margin:12px 0 9px; padding:13px 14px 12px; border:1px solid #c9a6f0; border-radius:12px; background:linear-gradient(135deg,#7442a5,#512477); color:#fff; font:700 16px monospace; letter-spacing:1.5px; box-shadow:0 4px 18px #8b50c477; cursor:pointer; }
+    .specials-toggle-heading { display:flex; align-items:center; justify-content:center; gap:10px; }
+    .specials-thumbnails { width:min(100%,360px); display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+    .specials-thumb { display:block; width:100%; aspect-ratio:1.48 / 1; object-fit:cover; overflow:hidden; border:1px solid rgba(255,255,255,.65); border-radius:5px; background:#211b2c; box-shadow:0 2px 7px #160d2780; }
+    .specials-toggle .specials-chevron { font-size:18px; }
     .specials-toggle:active { transform:scale(.985); }
     .specials-toggle[aria-expanded="true"] .specials-chevron { transform:rotate(180deg); }
     .specials-chevron { display:inline-block; transition:transform .2s ease; font-size:17px; line-height:1; }
@@ -566,7 +570,7 @@ button.chapter-choice { cursor:pointer; }
         </div>
       </div>
     </div>
-    <button type="button" class="specials-toggle" id="specials-toggle" aria-expanded="false" aria-controls="specials-list"><span>✦</span> Especials <span class="specials-chevron" aria-hidden="true">⌄</span></button>
+    <button type="button" class="specials-toggle" id="specials-toggle" aria-expanded="false" aria-controls="specials-list"><span class="specials-toggle-heading"><span>✦</span> ESPECIALS <span class="specials-chevron" aria-hidden="true">⌄</span></span><span class="specials-thumbnails" aria-hidden="true"><img class="specials-thumb" src="assets/especials/01.gif" alt=""><img class="specials-thumb" src="assets/especials/02.gif" alt=""><img class="specials-thumb" src="assets/especials/03.gif" alt=""><img class="specials-thumb" src="assets/especials/04.gif" alt=""></span></button>
     <div id="specials-list" class="specials-list" hidden>
       <button type="button" class="chapter-choice locked christmas-special mariajo-special" id="chapter-special" aria-label="Capítol especial bloquejat: només per a membres de Patreon"><span class="mariajo-special-info"><span class="chapter-name">🔒 Especial: 🩲 Mariajo pegging</span><span class="chapter-meta"><span class="chapter-time" id="time-seven">◷ —</span><span class="coming-soon-label">Només membres Patreon · Veure membresia</span></span></span></button>
       <button type="button" class="chapter-choice locked christmas-special coming-soon" id="special-maribel-rossa" disabled aria-disabled="true"><span class="chapter-name">Especial: 💃🏻 Maribel, rossa i gitana</span><span class="chapter-meta"><span class="coming-soon-label">Disponible aviat</span></span></button>

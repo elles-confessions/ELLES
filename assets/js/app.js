@@ -1,3 +1,7 @@
+document.getElementById('anti-porn-open').addEventListener('click',()=>{document.getElementById('anti-porn-modal').hidden=false;});
+document.getElementById('anti-porn-close').addEventListener('click',()=>{document.getElementById('anti-porn-modal').hidden=true;});
+document.getElementById('anti-porn-modal').addEventListener('click',e=>{if(e.target.id==='anti-porn-modal')e.currentTarget.hidden=true;});
+
 let text = `No hi ha manera possible d'escriure el que he de dir sense que et caigui malament i em jutgis de seguida.
 
 A la vida he tingut sempre dues fixacions, les dones i l'alcohol. Bàsicament tot el demés careix d'importància per mi.
@@ -54,7 +58,7 @@ En una de les nostres converses em va explicar el sexe amb la seva antiga parell
 Sí que en feien. Va dir que li agradava i que mai ho havia fet amb un home. La meva pròstata es va excitar, de seguida estàvem tots dos buscant models de strap-on. Un cop pagada la comanda vaig començar a fantasejar, quasi no dormo aquella nit. Mai havia viscut aquella experiència i era.el moment. Tenia quaranta-sis anys.
 Vam fixar de nou una cita, aquest cop vaig pujar al.tren sense pensar-ho. Amb el strap-on a la motxilla amb la sensació que portava una bomba i que cap passatger podia saber-ho.`;
 const chapterSevenText = ""; // Capítol VII creat, pendent d’incorporar-hi el text.
-const chapterTitles = {1:"Compartir és hippy",2:"Sandra i Marc",3:"Laia la del poble",4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1",7:"Les bessones (Clickbait)",8:"Especial: Mariajo pegging"};
+const chapterTitles = {1:"Compartir és viure",2:"Sandra i Marc",3:"Laia la del poble",4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1",7:"Les bessones (Clickbait)",8:"Especial: Mariajo pegging"};
 const chapterTexts = {1:chapterOneText,2:chapterTwoText,3:chapterThreeText,4:chapterFourText,7:chapterSevenText,8:chapterMariajoText};
 let currentChapter = 1;
 
@@ -68,6 +72,14 @@ const nextButton = document.getElementById("next");
 const previousButton = document.getElementById("previous");
 const completeModal = document.getElementById("complete-modal");
 const chapterIndex = document.getElementById("chapter-index");
+const patreonPage = document.getElementById("patreon-page");
+const openPatreonPage = document.getElementById("open-patreon-page");
+const closePatreonPage = document.getElementById("close-patreon-page");
+openPatreonPage.addEventListener("click", () => { chapterIndex.hidden = true; patreonPage.hidden = false; });
+function closePatreonMembershipPage() { patreonPage.hidden = true; chapterIndex.hidden = false; }
+closePatreonPage.addEventListener("click", closePatreonMembershipPage);
+document.querySelectorAll(".patreon-pay-button").forEach(button => { button.addEventListener("click", () => window.alert("No disponible encara")); });
+patreonPage.addEventListener("click", event => { if (event.target === patreonPage) closePatreonMembershipPage(); });
 const specialsToggle = document.getElementById("specials-toggle");
 const specialsList = document.getElementById("specials-list");
 specialsToggle.addEventListener("click", () => {
@@ -90,9 +102,38 @@ floatingStats.addEventListener("animationend", event => {
   if (event.animationName === "stats-scroll-motion") floatingStats.classList.remove("is-scrolling");
 });
 const shortcutHelp = document.getElementById("shortcut-help");
-document.getElementById("shortcut-open").addEventListener("click", () => { shortcutHelp.hidden = false; });
+let deferredInstallPrompt = null;
+const shortcutButton = document.getElementById("shortcut-open");
+const desktopDownloadButton = document.getElementById("desktop-download-open");
+if (desktopDownloadButton) desktopDownloadButton.addEventListener("click", () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.finally(() => { deferredInstallPrompt = null; });
+  } else if (shortcutHelp) shortcutHelp.hidden = false;
+});
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  if (desktopDownloadButton) desktopDownloadButton.title = "Instal·lar ELLES";
+});
+if (shortcutButton) shortcutButton.addEventListener("click", async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    return;
+  }
+  if (shortcutHelp) shortcutHelp.hidden = false;
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  if (desktopDownloadButton) desktopDownloadButton.title = "ELLES instal·lat";
+});
 document.getElementById("shortcut-close").addEventListener("click", () => { shortcutHelp.hidden = true; });
 shortcutHelp.addEventListener("click", (event) => { if (event.target === shortcutHelp) shortcutHelp.hidden = true; });
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {}));
+}
 const tomorrowScreen = document.getElementById("tomorrow-screen");
 const themeToggle = document.getElementById("theme-toggle");
 themeToggle.addEventListener("click", () => {
@@ -118,19 +159,14 @@ const scenes = [
   `<svg viewBox="0 0 240 90"><circle class="line" cx="120" cy="44" r="31"/><path class="line" d="M120 13v8m0 46v8M89 44h8m46 0h8M98 22l6 6m32 32 6 6m0-44-6 6m-32 32-6 6"/><path class="line" d="M120 28v17l12 8"/><path class="soft" d="M120 13a31 31 0 0 1 0 62Z"/></svg>`
 ];
 
-// Administració local: les credencials al codi del navegador no substitueixen un servidor segur.
-const adminUser = "Sid";
-const adminPassword = "Pueblo33@!";
-const adminLogin = document.getElementById("admin-login");
-const adminPanel = document.getElementById("admin-panel");
-const adminMessage = document.getElementById("admin-login-message");
 function estimateReadingTime(value) {
   const words = value.trim().split(/\s+/).filter(Boolean).length;
   return words ? `◷ ${Math.max(1, Math.ceil(words / 200))} min` : "◷ —";
 }
 function renderChapterListRatings() {
   const saved = getChapterRatings();
-  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",8:"chapter-special"};
+  const ids = {1:"chapter-one",2:"chapter-two",3:"chapter-three",4:"chapter-four",5:"chapter-five",6:"chapter-six",7:"chapter-seven",8:"chapter-special"};
+  const labels = {1:"CAPÍTOL I",2:"CAPÍTOL II",3:"CAPÍTOL III",4:"CAPÍTOL IV",5:"CAPÍTOL V",6:"CAPÍTOL VI",7:"CAPÍTOL VII",8:"CAPÍTOL ESPECIAL"};
   for (const [number, id] of Object.entries(ids)) {
     const button = document.getElementById(id);
     const meta = button?.querySelector(".chapter-meta");
@@ -138,34 +174,75 @@ function renderChapterListRatings() {
     if (!meta || !time) continue;
     let summary = meta.querySelector(".chapter-rating-summary");
     const value = Number(saved[number]) || 0;
-    if (!value) { summary?.remove(); continue; }
-    if (!summary) {
-      summary = document.createElement("span");
-      summary.className = "chapter-rating-summary";
-      meta.insertBefore(summary, time.nextSibling);
-    }
-    summary.textContent = `★ ${value}/5`;
-    summary.setAttribute("aria-label", `Valoració: ${value} de 5 estrelles`);
-    summary.title = `Valoració: ${value} de 5 estrelles`;
+    if (value) {
+      if (!summary) { summary = document.createElement("span"); summary.className = "chapter-rating-summary"; meta.insertBefore(summary, time.nextSibling); }
+      summary.textContent = `★ ${value}/5`;
+      summary.setAttribute("aria-label", `Valoració: ${value} de 5 estrelles`);
+      summary.title = `Valoració: ${value} de 5 estrelles`;
+    } else { summary?.remove(); }
+    let commentCount = meta.querySelector(".chapter-comment-count");
+    if (!commentCount) { commentCount = document.createElement("span"); commentCount.className = "chapter-comment-count"; meta.insertBefore(commentCount, meta.querySelector('[id$="-status"]') || null); }
+    const chapterName = button.querySelector(".chapter-name")?.textContent.replace(/^.*?:\s*/, "").trim() || "";
+    const commentKey = `elles-comments-${labels[number]}-${chapterName}`;
+    let count = 0;
+    try { const items = JSON.parse(localStorage.getItem(commentKey) || "[]"); count = Array.isArray(items) ? items.length : 0; } catch(e) {}
+    commentCount.textContent = `▱ ${count}`;
+    commentCount.title = `${count} ${count === 1 ? "comentari" : "comentaris"}`;
+    commentCount.setAttribute("aria-label", commentCount.title);
+  }
+}
+function updateChapterRowState(number, button) {
+  if (!button) return;
+  const status = button.querySelector(`#chapter-${["","one","two","three","four","five","six","seven"][number]}-status`);
+  if (!status) return;
+  const completed = new Set(getReadChapters()).has(number);
+  const words = getWordsReadByChapter();
+  const inProgress = !completed && (Number(words[String(number)]) || 0) > 0;
+  button.classList.toggle("completed", completed);
+  button.classList.toggle("in-progress", inProgress);
+  button.classList.toggle("available", !completed && !inProgress && !button.disabled);
+  status.classList.add("chapter-arrow");
+  status.removeAttribute("aria-hidden");
+  if (completed) {
+    status.textContent = "✓";
+    status.setAttribute("aria-label", "Capítol finalitzat");
+    status.title = "Finalitzat";
+  } else if (inProgress) {
+    status.textContent = "●";
+    status.setAttribute("aria-label", "Lectura en curs; reprendre capítol");
+    status.title = "En curs · reprendre";
+  } else {
+    status.textContent = "Pendent de llegir";
+    status.classList.remove("chapter-arrow");
+    status.classList.add("chapter-pending-label");
+    status.setAttribute("aria-label", "Pendent de llegir");
+    status.title = "Pendent de llegir";
+  }
+  if (completed || inProgress) {
+    status.classList.remove("chapter-pending-label");
+    status.classList.add("chapter-arrow");
   }
 }
 function refreshChapterMenu() {
-  for (let n=2;n<=6;n++) {
-    const suffix=["","","two","three","four","five","six"][n];
+  for (let n=4;n<=6;n++) {
+    const suffix=["","","","","four","five","six"][n];
     let button=document.getElementById(`chapter-${suffix}`);
-    if (!button && n>3) {
+    if (!button) {
       const names={4:"Laia Punky",5:"El cul de la Gemma",6:"Míriam número 1"};
       button=document.createElement("button"); button.type="button"; button.id=`chapter-${suffix}`;
       button.className="chapter-choice locked";
       button.innerHTML=`<span class="chapter-name">Capítol ${["","","","","IV","V","VI"][n]}: ${names[n]}</span><span class="chapter-meta"><span class="chapter-time" id="time-${suffix}">◷ —</span><span class="chapter-arrow" id="chapter-${suffix}-status" aria-hidden="true">›</span></span>`;
-      button.addEventListener("click",()=>loadChapter(n));
-      const chapterSeven=document.getElementById("chapter-seven"); const indexBack=document.getElementById("admin-open"); chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven || indexBack);
+      const chapterSeven=document.getElementById("chapter-seven");
+      chapterIndex.querySelector(".index-card").insertBefore(button,chapterSeven);
     }
-    if (button && chapterTexts[n]) {
-      button.className="chapter-choice available";
-      const status=button.querySelector(`#chapter-${suffix}-status`);
-      // No substituir chapter-meta: conté el temps estimat de lectura.
-      if(status) status.textContent="›"; status.classList.add("chapter-arrow");
+    const hasText = typeof chapterTexts[n] === "string" && chapterTexts[n].trim().length > 0;
+    button.disabled = !hasText;
+    button.setAttribute("aria-disabled", String(!hasText));
+    button.classList.toggle("locked", !hasText);
+    button.classList.toggle("available", hasText);
+    if (hasText && !button.dataset.openHandler) {
+      button.addEventListener("click",()=>loadChapter(n));
+      button.dataset.openHandler="true";
     }
   }
   const chapterSevenButton=document.getElementById("chapter-seven");
@@ -179,13 +256,46 @@ function refreshChapterMenu() {
       chapterSevenButton.dataset.openHandler="true";
     }
   }
-  for (const n of [1,2,3,4,5,6,8]) {
+  for (const n of [1,2,3,4,5,6,7,8]) {
     const suffix=["","one","two","three","four","five","six","seven","seven"][n];
-    const time=document.getElementById(`time-${suffix}`);
+    const id = n===8 ? "chapter-special" : `chapter-${suffix}`;
+    const button=document.getElementById(id);
+    const time=document.getElementById(n===7 ? "time-seven-chapter" : `time-${suffix}`);
     if(time) time.textContent=estimateReadingTime(chapterTexts[n] || "");
+    if (n <= 7) updateChapterRowState(n, button);
   }
   renderChapterListRatings();
+  renderChapterCommentLinks();
 }
+
+// Cada capítol té el seu accés directe a la tertúlia i el seu recompte local.
+let commentsKeyOverride = null;
+function chapterCommentKey(number) {
+  const roman = ["","I","II","III","IV","V","VI","VII"][number] || String(number);
+  const title = chapterTitles[number] || "";
+  return 'elles-comments-CAPÍTOL ' + roman + '-' + title;
+}
+function renderChapterCommentLinks() {
+  for (const number of [1,2,3,4,5,6,7]) {
+    const suffix = ["","one","two","three","four","five","six","seven"][number];
+    const chapterButton = document.getElementById(`chapter-${suffix}`);
+    if (!chapterButton) continue;
+    let link = document.getElementById(`chapter-comments-${number}`);
+    if (!link) {
+      link = document.createElement('button');
+      link.type = 'button';
+      link.id = `chapter-comments-${number}`;
+      link.className = 'chapter-comments-link';
+      link.addEventListener('click', () => openChapterComments(number));
+      chapterButton.insertAdjacentElement('afterend', link);
+    }
+    let count = 0;
+    try { count = JSON.parse(localStorage.getItem(chapterCommentKey(number)) || '[]').length; } catch (_) {}
+    link.textContent = `💬 ${count} ${count === 1 ? 'comentari' : 'comentaris'} · Obrir tertúlia`;
+    link.setAttribute('aria-label', `Obrir els comentaris del capítol ${number}: ${count} comentaris`);
+  }
+}
+
 try {
   const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}");
   // Migra el text especial antic del número 7 a la clau interna 8.
@@ -193,29 +303,18 @@ try {
   for (const [key,value] of Object.entries(saved)) if (chapterTitles[key] && typeof value==="string" && value.trim()) chapterTexts[key]=value;
 } catch(e) {}
 refreshChapterMenu();
-document.getElementById("admin-open").addEventListener("click",()=>{chapterIndex.hidden=true;adminLogin.hidden=false;});
-document.getElementById("admin-login-close").addEventListener("click",()=>adminLogin.hidden=true);
-document.getElementById("admin-login-submit").addEventListener("click",()=>{
-  const u=document.getElementById("admin-user").value, p=document.getElementById("admin-pass").value;
-  if(u===adminUser && p===adminPassword){adminLogin.hidden=true;adminPanel.hidden=false;adminMessage.textContent="Accés correcte.";}
-  else adminMessage.textContent="Usuari o clau incorrectes.";
-});
-document.getElementById("admin-close").addEventListener("click",()=>adminPanel.hidden=true);
-document.getElementById("admin-file").addEventListener("change",async e=>{
-  const file=e.target.files?.[0]; if(!file)return;
-  document.getElementById("admin-text").value=await file.text();
-  document.getElementById("admin-save-message").textContent=`Arxiu carregat: ${file.name}. Prem «Guardar capítol» per incorporar-lo.`;
-});
-document.getElementById("admin-save-chapter").addEventListener("click",()=>{
-  const n=Number(document.getElementById("admin-chapter").value), value=document.getElementById("admin-text").value;
-  if(!value.trim()){document.getElementById("admin-save-message").textContent="Enganxa o selecciona primer un text.";return;}
-  chapterTexts[n]=value;
-  try { const saved=JSON.parse(localStorage.getItem("elles_admin_chapters")||"{}"); saved[n]=value; localStorage.setItem("elles_admin_chapters",JSON.stringify(saved)); }
-  catch(e){document.getElementById("admin-save-message").textContent="No s'ha pogut desar al navegador. Comprova l'espai o els permisos.";return;}
-  document.getElementById("admin-save-message").textContent=`Capítol ${n} guardat correctament en aquest navegador.`;
-  refreshChapterMenu();
-});
-document.getElementById("admin-show-stats").addEventListener("click",()=>{document.getElementById("admin-stats").hidden=false;});
+// Assegura que el capítol IV (Laia Punky), que ja té text, quedi disponible.
+const laiaPunkyButton = document.getElementById("chapter-four");
+if (laiaPunkyButton && chapterTexts[4] && chapterTexts[4].trim()) {
+  laiaPunkyButton.disabled = false;
+  laiaPunkyButton.setAttribute("aria-disabled", "false");
+  laiaPunkyButton.classList.remove("locked");
+  laiaPunkyButton.classList.add("available");
+  if (!laiaPunkyButton.dataset.openHandler) {
+    laiaPunkyButton.addEventListener("click", () => loadChapter(4));
+    laiaPunkyButton.dataset.openHandler = "true";
+  }
+}
 
 function updateScene() {
   if (currentChapter === 2) {
@@ -301,6 +400,8 @@ function updateReadingStats() {
   if (readingTime) readingTime.textContent = timeText;
   if (readingTotalWords) readingTotalWords.textContent = wordsRead.toLocaleString("ca-ES");
   updateChapterCount();
+  const rowSuffix = ["","one","two","three","four","five","six","seven"][currentChapter];
+  if (rowSuffix) updateChapterRowState(currentChapter, document.getElementById(`chapter-${rowSuffix}`));
 }
 function updateProgress() {
   const left = Math.ceil(((text.length - position) / text.length) * 100);
@@ -373,15 +474,6 @@ function finishChunkDisplay() {
       endMark.className = "chapter-end-mark";
       endMark.textContent = "***";
       story.appendChild(endMark);
-    }
-    // Animació del capítol I: apareix dins la caixa de lectura en acabar el text.
-    if (currentChapter === 1 && !story.querySelector(".chapter-one-animation")) {
-      const animation = document.createElement("img");
-      animation.className = "chapter-one-animation";
-      animation.src = "animació/capitol-I-animacio.gif";
-      animation.alt = "Dos infants ballant alegrement al pati";
-      animation.loading = "lazy";
-      story.appendChild(animation);
     }
     completionPending = true;
     status.textContent = "TEXT COMPLETAT · CONTINUA";
@@ -474,12 +566,13 @@ function showCompletionModal() {
   if (!completionPending) return;
   completionPending = false;
   nextButton.disabled = true;
-  const completedStatus = document.getElementById(`chapter-${["","one","two","three","four","five","six"][currentChapter]}-status`);
+  const completedSuffix = ["","one","two","three","four","five","six","seven"][currentChapter];
+  const completedStatus = completedSuffix ? document.getElementById(`chapter-${completedSuffix}-status`) : null;
   if (currentChapter === 1) chapterOneCompleted = true;
   const readChapters = new Set(getReadChapters()); readChapters.add(Number(currentChapter));
   try { localStorage.setItem("elles_read_chapters", JSON.stringify([...readChapters])); } catch(e) {}
   updateReadingStats();
-  if (completedStatus) { completedStatus.textContent = "✓ Finalitzat"; completedStatus.closest(".chapter-choice")?.classList.add("completed"); }
+  refreshChapterMenu();
   renderChapterRating();
   completeModal.hidden = false;
 }
@@ -511,18 +604,6 @@ function previousChunk() {
 startButton.addEventListener("click", startChunk);
 nextButton.addEventListener("click", nextChunk);
 previousButton.addEventListener("click", previousChunk);
-
-// Panell d'animacions accessible des del botó central inferior.
-const animationsModal = document.getElementById("animations-modal");
-const animationsButton = document.getElementById("animations-button");
-const closeAnimationsButton = document.getElementById("close-animations");
-function closeAnimations() { animationsModal.hidden = true; }
-animationsButton.addEventListener("click", () => { animationsModal.hidden = false; closeAnimationsButton.focus(); });
-closeAnimationsButton.addEventListener("click", closeAnimations);
-animationsModal.addEventListener("click", event => { if (event.target === animationsModal) closeAnimations(); });
-document.addEventListener("keydown", event => { if (event.key === "Escape" && !animationsModal.hidden) closeAnimations(); });
-
-
 story.addEventListener("click", () => {
   // Durant l'efecte màquina d'escriure, un toc revela només
   // la resta del fragment actual, sense saltar-se la resta del capítol.
@@ -555,7 +636,6 @@ if (homeButton) homeButton.addEventListener("click", () => {
   if (playing) stopTyping();
   stopReadAloud();
   completeModal.hidden = true;
-  paymentPage.hidden = true;
   chapterIndex.hidden = false;
   try { updateReadingStats(); } catch (error) { console.warn("No s'han pogut actualitzar les estadístiques:", error); }
 });
@@ -568,6 +648,14 @@ if (indexBackButton) indexBackButton.addEventListener("click", () => {
   chapterIndex.hidden = true;
 });
 function loadChapter(number) {
+  // Els capítols especials resten bloquejats fins que hi hagi verificació real de membresia Patreon al servidor.
+  if (number >= 8) {
+    chapterIndex.hidden = true;
+    patreonPage.hidden = false;
+    const note = document.getElementById("patreon-pay-note");
+    if (note) note.textContent = "Aquest capítol és exclusiu per a membres Patreon. La verificació automàtica de membresia encara no està connectada; no es pot concedir accés des d'aquest navegador.";
+    return;
+  }
   stopTyping();
   stopReadAloud();
   currentChapter = number;
@@ -583,14 +671,18 @@ function loadChapter(number) {
   status.textContent = "PREPARAT";
   document.getElementById("main-chapter-label").textContent = number === 8 ? "ESPECIAL" : `CAPÍTOL ${["","I","II","III","IV","V","VI","VII"][number]}`;
   document.getElementById("main-chapter-title").textContent = chapterTitles[number] || "";
-  document.getElementById("main-chapter-subtitle").textContent = number === 1 ? "(Puto hippy)" : "";
+  document.getElementById("main-chapter-subtitle").textContent = "";
   updateProgress(); updateScene(); updateReadingStats();
-  // En seleccionar un capítol, començar a mostrar el text immediatament.
   startChunk();
 }
-document.getElementById("chapter-one").addEventListener("click", () => loadChapter(1));
-document.getElementById("chapter-two").addEventListener("click", () => loadChapter(2));
-document.getElementById("chapter-three").addEventListener("click", () => loadChapter(3));
+for (const number of [1,2,3,4,5,6,7]) {
+  const suffix = ["","one","two","three","four","five","six","seven"][number];
+  const button = document.getElementById(`chapter-${suffix}`);
+  if (button && !button.dataset.openHandler && !button.disabled) {
+    button.addEventListener("click", () => loadChapter(number));
+    button.dataset.openHandler = "true";
+  }
+}
 
 // Lectura en veu alta sincronitzada amb els fragments visibles.
 const voiceButton = document.getElementById("voice-button");
@@ -655,48 +747,134 @@ voiceButton.addEventListener("click", () => {
   else if (playing) speakCurrentChunk();
 });
 
-const paymentPage = document.getElementById("payment-page");
-let selectedPlan = "episode";
-let selectedPaymentMethod = "PayPal";
-function updatePremiumEpisodeTotal() {
-  const count = document.querySelectorAll("#chapter-index .christmas-special:not(.coming-soon)").length;
-  const label = count === 1 ? "episodi" : "episodis";
-  document.getElementById("premium-episode-total").textContent = `${count} ${label}`;
+
+// Espai de comentaris per capítol. En aquesta versió, les dades són locals al dispositiu.
+const commentsModal = document.getElementById('comments-modal');
+const animationsButton = document.getElementById('animations-button');
+const animationsModal = document.getElementById('animations-modal');
+const chapterAnimationGif = document.getElementById('chapter-animation-gif');
+const chapterAnimationEmpty = document.getElementById('chapter-animation-empty');
+const chapterAnimations = {1:'assets/cinema/cap01.gif'};
+function openChapterCinema(){
+  const gifPath = chapterAnimations[currentChapter];
+  if (gifPath) {
+    chapterAnimationGif.src = gifPath;
+    chapterAnimationGif.alt = `Animació del capítol ${currentChapter}`;
+    chapterAnimationGif.hidden = false;
+    chapterAnimationEmpty.hidden = true;
+  } else {
+    chapterAnimationGif.removeAttribute('src');
+    chapterAnimationGif.hidden = true;
+    chapterAnimationEmpty.hidden = false;
+  }
+  animationsModal.hidden = false;
 }
-updatePremiumEpisodeTotal();
-function openSpecialPayment() {
-  updatePremiumEpisodeTotal();
-  selectedPlan = "pack1";
-  document.querySelectorAll(".price-option").forEach(b => { const on=b.dataset.plan===selectedPlan; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
+animationsButton.addEventListener('click', openChapterCinema);
+document.getElementById('close-animations').addEventListener('click',()=>{animationsModal.hidden=true;chapterAnimationGif.removeAttribute('src');});
+animationsModal.addEventListener('click',e=>{if(e.target===animationsModal){animationsModal.hidden=true;chapterAnimationGif.removeAttribute('src');}});
+const commentsButton = document.getElementById('comments-button');
+const commentsList = document.getElementById('comments-list');
+const commentsForm = document.getElementById('comment-form');
+
+// CAPTCHA intern d'ELLES: repte aritmètic aleatori abans de publicar.
+const captchaQuestion = document.getElementById('elles-captcha-question');
+const captchaAnswer = document.getElementById('elles-captcha-answer');
+const captchaFeedback = document.getElementById('elles-captcha-feedback');
+let captchaExpected = null;
+let captchaIssuedAt = 0;
+function newEllesCaptcha(){
+  const a = Math.floor(Math.random()*8)+2;
+  const b = Math.floor(Math.random()*8)+1;
+  const subtract = Math.random() > .5;
+  const left = subtract ? Math.max(a,b) : a;
+  const right = subtract ? Math.min(a,b) : b;
+  const op = subtract ? '−' : '+';
+  captchaExpected = subtract ? left-right : left+right;
+  captchaIssuedAt = Date.now();
+  captchaQuestion.textContent = `Quant fa ${left} ${op} ${right}?`;
+  captchaAnswer.value = '';
+  captchaFeedback.textContent = 'Completa la prova abans de publicar.';
+  captchaFeedback.className = 'elles-captcha-feedback';
+}
+document.getElementById('elles-captcha-new').addEventListener('click',newEllesCaptcha);
+newEllesCaptcha();
+function currentCommentKey(){ return commentsKeyOverride || ('elles-comments-' + (document.getElementById('main-chapter-label')?.textContent || 'capitol').trim() + '-' + (document.getElementById('main-chapter-title')?.textContent || '').trim()); }
+function renderComments(){
+  const items = JSON.parse(localStorage.getItem(currentCommentKey()) || '[]');
+  document.getElementById('comments-chapter-count').textContent = items.length + (items.length===1 ? ' comentari guardat en aquest dispositiu' : ' comentaris guardats en aquest dispositiu');
+  commentsList.replaceChildren();
+  if(!items.length){ const p=document.createElement('p'); p.className='comment-empty'; p.textContent='Encara no hi ha comentaris guardats en aquest dispositiu. Sigues la primera persona a obrir el debat.'; commentsList.append(p); return; }
+  items.slice().reverse().forEach((item,index)=>{
+    const article=document.createElement('article'); article.className='comment-item';
+    const meta=document.createElement('div'); meta.className='comment-meta';
+    const author=document.createElement('strong'); author.textContent=item.name || 'Anònim';
+    const date=document.createElement('span'); date.textContent=new Date(item.date).toLocaleString('ca-ES');
+    meta.append(author,date);
+    const body=document.createElement('p'); body.className='comment-body'; body.textContent=item.text;
+    const actions=document.createElement('div'); actions.className='comment-actions';
+    const like=document.createElement('button'); like.type='button'; like.textContent='♡ M’agrada ('+(item.likes||0)+')'; like.addEventListener('click',()=>{item.likes=(item.likes||0)+1; const all=JSON.parse(localStorage.getItem(currentCommentKey())||'[]'); const actual=all.find(x=>x.id===item.id); if(actual){actual.likes=item.likes;localStorage.setItem(currentCommentKey(),JSON.stringify(all));renderComments();}});
+    const report=document.createElement('button'); report.type='button'; report.textContent='Denunciar'; report.addEventListener('click',()=>alert('La denúncia quedarà disponible quan connectem el servei de moderació d’ELLES.'));
+    actions.append(like,report); article.append(meta,body,actions); commentsList.append(article);
+  });
+}
+function openChapterComments(chapterNumber){
+  commentsKeyOverride = Number.isInteger(chapterNumber) ? chapterCommentKey(chapterNumber) : null;
+  // Si s'obre des del bloc de valoracions final, amaga primer la finestra de final de capítol perquè no tapi la tertúlia.
+  const completeModal = document.getElementById('complete-modal');
+  if (completeModal) completeModal.hidden = true;
+  commentsModal.hidden = false;
+  commentsModal.style.zIndex = '40';
+  renderComments();
+}
+commentsButton.addEventListener('click',()=>openChapterComments());
+document.getElementById('chapter-discussion-button').addEventListener('click',openChapterComments);
+document.getElementById('close-comments').addEventListener('click',()=>commentsModal.hidden=true);
+commentsModal.addEventListener('click',e=>{if(e.target===commentsModal)commentsModal.hidden=true;});
+commentsForm.addEventListener('submit',e=>{e.preventDefault();const text=document.getElementById('comment-text').value.trim();if(!text)return;const answer=Number(captchaAnswer.value.trim());if(!captchaAnswer.value.trim() || answer!==captchaExpected || Date.now()-captchaIssuedAt<1200){captchaFeedback.textContent='Verificació incorrecta. Revisa la resposta i torna-ho a provar.';captchaFeedback.className='elles-captcha-feedback error';if(answer===captchaExpected && Date.now()-captchaIssuedAt<1200)captchaFeedback.textContent='Espera un moment abans de publicar.';return;}captchaFeedback.textContent='Verificació correcta.';captchaFeedback.className='elles-captcha-feedback ok';const anonymous=document.getElementById('comment-anonymous').checked;const name=anonymous?'Anònim':(document.getElementById('comment-name').value.trim()||'Lector/a');const all=JSON.parse(localStorage.getItem(currentCommentKey())||'[]');all.push({id:Date.now().toString(),name,text,date:new Date().toISOString(),likes:0});localStorage.setItem(currentCommentKey(),JSON.stringify(all));document.getElementById('comment-text').value='';newEllesCaptcha();renderComments();renderChapterCommentLinks();commentsModal.hidden=true;});
+
+document.getElementById("chapter-special").addEventListener("click", () => {
   chapterIndex.hidden = true;
-  paymentPage.hidden = false;
-  updatePayButton();
-}
-function updatePayButton() {
-  const planPrices = { pack1: "0,99 €", pack5: "3 €", pack15: "9,99 €" };
-  document.getElementById("pay-button").textContent = `Pagar ${planPrices[selectedPlan]} amb ${selectedPaymentMethod}`;
-}
-document.querySelectorAll(".price-option").forEach(button => button.addEventListener("click", () => {
-  selectedPlan = button.dataset.plan;
-  document.querySelectorAll(".price-option").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
-  updatePayButton();
-}));
-document.querySelectorAll(".payment-method").forEach(button => button.addEventListener("click", () => {
-  selectedPaymentMethod = button.dataset.method;
-  document.querySelectorAll(".payment-method").forEach(b => { const on=b===button; b.classList.toggle("selected",on); b.setAttribute("aria-pressed",String(on)); });
-  updatePayButton();
-}));
-document.getElementById("payment-back").addEventListener("click", () => { paymentPage.hidden=true; chapterIndex.hidden=false; });
-document.getElementById("pay-button").addEventListener("click", () => {
-  const plans = { pack1: "1 episodi especial (0,99 €)", pack5: "5 episodis especials (3 €)", pack15: "15 episodis especials (9,99 €)" };
-  alert(`Has seleccionat el paquet de ${plans[selectedPlan]} i el pagament amb ${selectedPaymentMethod}. La passarel·la encara no està connectada: no s'ha fet cap cobrament.`);
+  patreonPage.hidden = false;
+  const note = document.getElementById("patreon-pay-note");
+  if (note) note.textContent = "Aquest capítol és exclusiu per a membres Patreon. Per accedir-hi cal una subscripció Mecenes, Fan o Groupie activa i verificació del compte.";
 });
-document.getElementById("chapter-special").addEventListener("click", openSpecialPayment);
-document.getElementById("premium-stats-button").addEventListener("click", openSpecialPayment);
 document.getElementById("wake-book").addEventListener("click", () => {
   tomorrowScreen.hidden = true;
   reset();
 });
 updateProgress();
 updateChapterCount();
+renderChapterCommentLinks();
 updateScene();
+
+
+// Capa de seguretat de navegació: garanteix que els capítols amb text s’obrin des de l’índex.
+// Es gestiona en captura perquè també funcioni amb els botons creats dinàmicament.
+(function installStableChapterNavigation(){
+  const index = document.getElementById("chapter-index");
+  if (!index || index.dataset.stableNavigation === "true") return;
+  index.dataset.stableNavigation = "true";
+  const chapterIds = {
+    "chapter-one": 1, "chapter-two": 2, "chapter-three": 3,
+    "chapter-four": 4, "chapter-five": 5, "chapter-six": 6,
+    "chapter-seven": 7
+  };
+  index.addEventListener("click", function(event){
+    const button = event.target && event.target.closest ? event.target.closest("button.chapter-choice") : null;
+    if (!button || !index.contains(button)) return;
+    const number = chapterIds[button.id];
+    if (!number) return;
+    const chapterText = chapterTexts[number];
+    if (button.disabled || typeof chapterText !== "string" || !chapterText.trim()) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    try { loadChapter(number); }
+    catch (error) {
+      console.error("No s’ha pogut obrir el capítol", number, error);
+      const status = document.getElementById("status");
+      if (status) status.textContent = "ERROR EN OBRIR · TORNA-HO A PROVAR";
+      index.hidden = false;
+    }
+  }, true);
+})();

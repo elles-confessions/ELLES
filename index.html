@@ -463,7 +463,82 @@ button.chapter-choice { cursor:pointer; }
 .elles-captcha-feedback.ok{color:#8fd0a1!important}.elles-captcha-feedback.error{color:#f08b96!important}
 
 
+#chapter-index .chapter-comments-link{display:inline-flex;align-items:center;flex:0 0 auto;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#c98b96;font:inherit;line-height:1.4;white-space:nowrap;cursor:pointer}
+#chapter-index .chapter-comments-link:hover,#chapter-index .chapter-comments-link:focus-visible{color:#fff;background:#2a2024;outline:1px solid #9e5965}
 
+
+/* ELLES — recuperació de la maquetació estable */
+:root {
+  --bg:#111315;
+  --paper:#e8e1d5;
+  --rose:#c76c79;
+  --muted:#92918c;
+}
+html, body { width:100%; min-width:0; height:100%; min-height:100%; }
+body { min-height:100dvh; overflow:hidden; }
+main { width:min(1120px,100%); min-width:0; min-height:0; padding:clamp(8px,1.8vh,18px) clamp(10px,2vw,22px); gap:8px; }
+.chapter-heading-row { min-width:0; flex-wrap:wrap; gap:7px 12px; padding:4px 8px; }
+.chapter, #main-chapter-title { max-width:100%; white-space:normal; overflow-wrap:anywhere; line-height:1.5; }
+#main-chapter-title { font-size:clamp(11px,1.2vw,14px); }
+main > h2 { flex:0 0 auto; text-align:center; }
+.screen { width:100%; min-width:0; min-height:0; border-radius:12px; padding:clamp(12px,2vw,22px); }
+.screen-header { min-width:0; flex-wrap:nowrap; }
+.file-tools { flex:1 1 auto; }
+#status { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#scene { flex:0 0 clamp(38px,8vh,68px); height:clamp(38px,8vh,68px); }
+#story { min-width:0; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#76515a transparent; }
+.controls { align-items:center; justify-content:center; flex-wrap:nowrap; }
+.controls > button { flex:0 1 64px; }
+#previous, #next { display:flex; align-items:center; justify-content:center; }
+#previous svg, #next svg { width:22px; height:22px; }
+#animations-button, #comments-button { flex:0 0 64px; }
+.overlay { overflow-y:auto; }
+.index-card { width:min(760px,100%); max-height:calc(100dvh - 24px); min-width:0; overflow-x:hidden; overflow-y:auto; }
+#chapter-index .index-title-image { max-width:100%; height:auto; object-fit:contain; }
+#chapter-index .chapter-comments-link { box-sizing:border-box; }
+button, a { -webkit-tap-highlight-color:transparent; }
+@media (max-width:600px) {
+  main { padding:5px 7px; gap:5px; }
+  .chapter-heading-row { gap:4px 8px; }
+  .screen { padding:10px 11px; border-radius:8px; }
+  .screen-header { gap:5px; }
+  #theme-toggle, #home-button, #voice-button { min-width:36px; width:36px; min-height:36px; }
+  #story { font-size:clamp(15px,4.1vw,17px); line-height:1.58; padding:10px 1px 22px; }
+  .controls { gap:9px; }
+  #previous, #next { min-width:48px; flex-basis:48px; }
+  #animations-button, #comments-button { min-width:54px; flex-basis:54px; }
+  .index-card { padding:17px 12px; }
+  .index-label-row { flex-wrap:wrap; }
+  .index-motto { flex-basis:100%; }
+}
+@media (max-height:700px) {
+  main { padding-top:4px; padding-bottom:4px; }
+  #scene { flex-basis:38px; height:38px; margin:3px auto 5px; }
+  #story { line-height:1.48; padding-top:7px; }
+  .controls { margin-top:6px; }
+}
+
+
+/* ELLES — fila compacta de temps, valoracions i comentaris */
+#chapter-index .chapter-choice .chapter-meta {
+  display:flex; flex-wrap:nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(6px,1.8vw,12px); width:100%; min-width:0; white-space:nowrap;
+  overflow:hidden; font-size:clamp(10px,2.8vw,12px);
+}
+#chapter-index .chapter-choice .chapter-meta .chapter-time,
+#chapter-index .chapter-choice .chapter-meta .chapter-rating-summary,
+#chapter-index .chapter-choice .chapter-meta .chapter-comment-count {
+  display:inline-flex; align-items:center; flex:0 0 auto; min-width:0;
+  white-space:nowrap; line-height:1.4;
+}
+#chapter-index .chapter-choice .chapter-meta .chapter-arrow {
+  flex:0 0 24px; margin-left:auto;
+}
+#chapter-index .chapter-choice { min-width:0; }
+@media(max-width:380px){
+  #chapter-index .chapter-choice .chapter-meta { gap:5px; font-size:9px; }
+  #chapter-index .chapter-choice .chapter-meta .chapter-arrow { width:22px; height:22px; flex-basis:22px; }
+}
 </style>
 
 </head>
@@ -863,15 +938,6 @@ function renderChapterListRatings() {
       summary.setAttribute("aria-label", `Valoració: ${value} de 5 estrelles`);
       summary.title = `Valoració: ${value} de 5 estrelles`;
     } else { summary?.remove(); }
-    let commentCount = meta.querySelector(".chapter-comment-count");
-    if (!commentCount) { commentCount = document.createElement("span"); commentCount.className = "chapter-comment-count"; meta.insertBefore(commentCount, meta.querySelector('[id$="-status"]') || null); }
-    const chapterName = button.querySelector(".chapter-name")?.textContent.replace(/^.*?:\s*/, "").trim() || "";
-    const commentKey = `elles-comments-${labels[number]}-${chapterName}`;
-    let count = 0;
-    try { const items = JSON.parse(localStorage.getItem(commentKey) || "[]"); count = Array.isArray(items) ? items.length : 0; } catch(e) {}
-    commentCount.textContent = `▱ ${count}`;
-    commentCount.title = `${count} ${count === 1 ? "comentari" : "comentaris"}`;
-    commentCount.setAttribute("aria-label", commentCount.title);
   }
 }
 function updateChapterRowState(number, button) {
@@ -951,9 +1017,40 @@ function refreshChapterMenu() {
   renderChapterCommentLinks();
 }
 
-// Els accessos i comptadors de comentaris no es mostren sota la llista de capítols.
+// Cada capítol té el seu accés directe a la tertúlia i el seu recompte local.
+let commentsKeyOverride = null;
+function chapterCommentKey(number) {
+  const roman = ["","I","II","III","IV","V","VI","VII"][number] || String(number);
+  const title = chapterTitles[number] || "";
+  return 'elles-comments-CAPÍTOL ' + roman + '-' + title;
+}
 function renderChapterCommentLinks() {
-  document.querySelectorAll('#chapter-index .chapter-comments-link').forEach(link => link.remove());
+  for (const number of [1,2,3,4,5,6,7]) {
+    const suffix = ["","one","two","three","four","five","six","seven"][number];
+    const chapterButton = document.getElementById(`chapter-${suffix}`);
+    const meta = chapterButton?.querySelector('.chapter-meta');
+    if (!chapterButton || !meta) continue;
+    let link = document.getElementById(`chapter-comments-${number}`);
+    if (!link) {
+      link = document.createElement('button');
+      link.type = 'button';
+      link.id = `chapter-comments-${number}`;
+      link.className = 'chapter-comments-link';
+      link.addEventListener('click', (event) => { event.stopPropagation(); openChapterComments(number); });
+    }
+    // El recompte de comentaris viu a la mateixa fila que el temps i la valoració.
+    // Elimina qualsevol comptador antic (▱ 0) abans de mostrar la icona 💬.
+    meta.querySelectorAll('.chapter-comment-count').forEach(oldCount => oldCount.remove());
+    for (const child of Array.from(meta.children)) {
+      if (child !== link && child.textContent.trim() === '▱ 0') child.remove();
+    }
+    if (link.parentElement !== meta) meta.appendChild(link);
+    let count = 0;
+    try { count = JSON.parse(localStorage.getItem(chapterCommentKey(number)) || '[]').length; } catch (_) {}
+    link.textContent = `💬 ${count}`;
+    link.setAttribute('aria-label', `Obrir els comentaris del capítol ${number}: ${count} comentaris`);
+    link.title = `${count} ${count === 1 ? 'comentari' : 'comentaris'}`;
+  }
 }
 
 try {
